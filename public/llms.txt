@@ -1,0 +1,35 @@
+# Danesh Mishra - Senior Cloud Architect
+
+> Helping businesses ship scalable cloud solutions faster with AI-augmented development.
+
+This is the WebMCP-enabled portfolio site for Danesh Mishra. AI agents can manage content on this site by editing data files and committing to the repository.
+
+## Links
+- Full details: https://danesm.github.io/llms-full.txt
+- Home: https://danesm.github.io/
+- Projects: https://danesm.github.io/projects
+- Skills: https://danesm.github.io/skills
+- Blog: https://danesm.github.io/blog
+- Contact: https://danesm.github.io/contact
+- Repository: https://github.com/danesm/danesm.github.io
+
+## Agent Instructions
+
+To update this site, an AI agent should:
+
+1. Clone the repository: `git clone https://github.com/danesm/danesm.github.io.git`
+2. Read `src/data/content-schema.json` for field definitions
+3. Make changes to the appropriate file (see Content Paths below)
+4. Validate changes against the schema
+5. Commit and push to `main` — GitHub Actions will rebuild and deploy
+
+### Content Paths
+- **New blog post**: Create `src/content/blog/{slug}.md` with frontmatter (title, date, description, tags)
+- **New project**: Append to the array in `src/data/projects.ts`
+- **New testimonial**: Append to the array in `src/data/testimonials.ts`
+- **New career entry**: Append to the array in `src/data/career.ts`
+- **Update profile**: Edit `src/data/professional.ts`
+- **Update skills**: Edit `src/data/skills.ts`
+
+### Content Schema
+See `src/data/content-schema.json` for JSON Schema definitions of all content types.
