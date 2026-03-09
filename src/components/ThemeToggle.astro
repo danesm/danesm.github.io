@@ -4,10 +4,10 @@
 ---
 
 <button
-  id="theme-toggle"
   type="button"
   aria-label="Switch to dark theme"
   class="theme-toggle-btn"
+  data-theme-toggle
 >
   <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <circle cx="12" cy="12" r="5"></circle>
@@ -121,11 +121,11 @@
     if (typeof localStorage !== 'undefined') {
       localStorage.setItem(THEME_KEY, theme);
     }
-    // Update ARIA label
-    const button = document.getElementById('theme-toggle');
-    if (button) {
+    // Update ARIA labels on all toggle buttons
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    buttons.forEach((button) => {
       button.setAttribute('aria-label', `Switch to ${theme === 'light' ? 'dark' : 'light'} theme`);
-    }
+    });
   }
 
   /**
@@ -139,17 +139,15 @@
 
   }
 
-  // Initialize theme toggle button
+  // Initialize theme toggle buttons (multiple instances: desktop + mobile)
   function initThemeToggle(): void {
-    const button = document.getElementById('theme-toggle');
-    if (button) {
-      // Set initial ARIA label
-      const currentTheme = getTheme();
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    const currentTheme = getTheme();
+    
+    buttons.forEach((button) => {
       button.setAttribute('aria-label', `Switch to ${currentTheme === 'light' ? 'dark' : 'light'} theme`);
-      
-      // Add click event listener
       button.addEventListener('click', toggleTheme);
-    }
+    });
   }
 
   // Initialize on page load
