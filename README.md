@@ -30,7 +30,7 @@ npm run build
 npm run preview
 ```
 
-### Commands
+### Commands..
 
 | Command                | Action                                           |
 | :--------------------- | :----------------------------------------------- |
