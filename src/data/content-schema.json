@@ -1,0 +1,58 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "project": {
+      "type": "object",
+      "required": ["id", "title", "description", "technologies", "category", "featured", "startDate"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "longDescription": { "type": "string" },
+        "technologies": { "type": "array", "items": { "type": "string" } },
+        "category": { "enum": ["cloud", "web", "mobile", "data", "other"] },
+        "featured": { "type": "boolean" },
+        "liveUrl": { "type": "string", "format": "uri" },
+        "repoUrl": { "type": "string", "format": "uri" },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" }
+      }
+    },
+    "testimonial": {
+      "type": "object",
+      "required": ["id", "quote", "authorName", "authorRole", "company"],
+      "properties": {
+        "id": { "type": "string" },
+        "quote": { "type": "string" },
+        "authorName": { "type": "string" },
+        "authorRole": { "type": "string" },
+        "company": { "type": "string" },
+        "source": { "enum": ["linkedin", "direct", "project"] }
+      }
+    },
+    "careerEntry": {
+      "type": "object",
+      "required": ["id", "role", "company", "location", "startDate", "description"],
+      "properties": {
+        "id": { "type": "string" },
+        "role": { "type": "string" },
+        "company": { "type": "string" },
+        "location": { "type": "string" },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" },
+        "description": { "type": "string" }
+      }
+    },
+    "blogFrontmatter": {
+      "type": "object",
+      "required": ["title", "date", "description"],
+      "properties": {
+        "title": { "type": "string" },
+        "date": { "type": "string", "format": "date" },
+        "description": { "type": "string" },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "draft": { "type": "boolean" }
+      }
+    }
+  }
+}

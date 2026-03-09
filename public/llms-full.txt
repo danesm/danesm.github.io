@@ -1,0 +1,185 @@
+# Danesh Mishra - Senior Cloud Architect
+
+> Helping businesses ship scalable cloud solutions faster with AI-augmented development.
+
+This is the WebMCP-enabled portfolio site for Danesh Mishra. AI agents can manage content on this site by editing data files and committing to the repository.
+
+## Links
+- Full details: https://danesm.github.io/llms-full.txt
+- Home: https://danesm.github.io/
+- Projects: https://danesm.github.io/projects
+- Skills: https://danesm.github.io/skills
+- Blog: https://danesm.github.io/blog
+- Contact: https://danesm.github.io/contact
+- Repository: https://github.com/danesm/danesm.github.io
+
+## Agent Instructions
+
+To update this site, an AI agent should:
+
+1. Clone the repository: `git clone https://github.com/danesm/danesm.github.io.git`
+2. Read `src/data/content-schema.json` for field definitions
+3. Make changes to the appropriate file (see Content Paths below)
+4. Validate changes against the schema
+5. Commit and push to `main` — GitHub Actions will rebuild and deploy
+
+### Content Paths
+- **New blog post**: Create `src/content/blog/{slug}.md` with frontmatter (title, date, description, tags)
+- **New project**: Append to the array in `src/data/projects.ts`
+- **New testimonial**: Append to the array in `src/data/testimonials.ts`
+- **New career entry**: Append to the array in `src/data/career.ts`
+- **Update profile**: Edit `src/data/professional.ts`
+- **Update skills**: Edit `src/data/skills.ts`
+
+### Content Schema
+See `src/data/content-schema.json` for JSON Schema definitions of all content types.
+
+---
+
+## Projects
+
+### Family Tree AppSync Application
+- **Category**: cloud | **Featured**: yes
+- **Technologies**: AWS AppSync, React, Vite, DynamoDB, GraphQL, Terraform, TypeScript
+- Demonstrates end-to-end cloud-native delivery: a managed GraphQL API via AWS AppSync provides real-time data synchronisation, DynamoDB delivers single-digit-millisecond reads at any scale, and Terraform ensures reproducible infrastructure across environments. The result is a zero-ops application that scales automatically while keeping monthly costs under $5 for typical usage.
+
+### Portfolio Website
+- **Category**: web | **Featured**: yes
+- **Technologies**: Astro, Tailwind CSS, TypeScript, GitHub Actions
+- **Live**: https://danesm.github.io | **Repo**: https://github.com/danesm/danesm.github.io
+- A high-performance portfolio site scoring 100 on Lighthouse across all categories. Built with Astro for zero-JavaScript static output, Tailwind CSS for rapid UI iteration, and GitHub Actions for continuous deployment. Serves as a reference architecture for static sites that need fast iteration cycles and near-instant page loads.
+
+### ConfigData
+- **Category**: data | **Featured**: no
+- **Technologies**: Configuration Management
+- **Repo**: https://github.com/danesm/ConfigData
+- Configuration data repository for managing and organizing application configuration across environments.
+
+### BIPLIST Sorter
+- **Category**: other | **Featured**: no
+- **Technologies**: Java
+- **Repo**: https://github.com/danesm/BIPLISTSorter
+- A utility tool for sorting IIB BIPLIST files, streamlining integration broker configuration management.
+
+### Go Programming Projects
+- **Category**: other | **Featured**: no
+- **Technologies**: Go
+- **Repo**: https://github.com/danesm/GoLangProjects
+- A collection of Go programming projects exploring concurrency patterns, web services, and systems programming.
+
+---
+
+## Certifications (26 total)
+
+1. AWS AI Foundational (L100) — 2025-12-03
+2. AWS Certified Machine Learning Engineer – Associate — 2025-08-25
+3. AWS Certified AI Practitioner — 2025-02-12
+4. AWS Certified AI Practitioner Early Adopter — 2025-02-12
+5. AWS Knowledge: Events and Workflows - Training Badge — 2024-08-06
+6. AWS Partner: Generative AI Essentials - Training Badge — 2024-01-23
+7. AWS Certified DevOps Engineer – Professional — 2023-05-13
+8. AWS Knowledge: Serverless - Training Badge — 2023-05-08
+9. AWS Certified Solutions Architect – Professional — 2022-11-14
+10. AWS Certified SysOps Administrator – Associate — 2021-01-12
+11. IBM Consultant Profession Certification - Experienced — 2020-09-23
+12. AWS Certified Developer – Associate — 2020-08-07
+13. IBM Quantum Conversations — 2020-01-10
+14. IBM Consulting - Core Experienced — 2019-12-09
+15. AWS Certified Solutions Architect – Associate — 2019-11-29
+16. IBM Intellectual Capital/ Intellectual Property Creator — 2019-06-13
+17. Architectural Thinking — 2019-01-22
+18. IBM AI Skills Academy Deep Learning Explorer — 2018-12-21
+19. IBM Intellectual Capital/ Intellectual Property Creator — 2018-12-03
+20. IBM Mentor — 2018-06-29
+21. IBM Mentor — 2018-06-20
+22. Enterprise Design Thinking Practitioner — 2018-06-17
+23. Banking Insights and Solutions (Silver) — 2018-06-03
+24. IBM Cloud Essentials — 2018-04-25
+25. IBM Blockchain Essentials — 2017-11-05
+26. Banking Industry Jumpstart — 2017-11-02
+
+---
+
+## Career History
+
+### Senior Cloud Architect — Amazon Web Services (AWS)
+- **Location**: United Kingdom | **Period**: 2020–Present
+- Designing and delivering large-scale cloud solutions for enterprise customers across EMEA. Leading architecture reviews, building reference implementations, and driving adoption of serverless and container-based workloads.
+
+### Cloud Architect — Amazon Web Services (AWS)
+- **Location**: London, UK | **Period**: 2017–2020
+- Partnered with financial services and media customers to design resilient, cost-optimised AWS architectures. Delivered migration strategies for legacy workloads and mentored teams on cloud-native development practices.
+
+### Senior Integration Architect — IBM
+- **Location**: Singapore | **Period**: 2014–2017
+- Led integration architecture for banking and telecommunications clients across Asia-Pacific. Designed API management platforms and event-driven middleware solutions handling millions of daily transactions.
+
+### Integration Consultant — IBM
+- **Location**: New York, USA | **Period**: 2011–2014
+- Delivered enterprise integration solutions for Fortune 500 clients in healthcare and retail. Specialised in IBM Integration Bus, MQ, and DataPower for high-throughput messaging and API gateway patterns.
+
+### Software Engineer — IBM
+- **Location**: Hursley, UK | **Period**: 2008–2011
+- Developed middleware components for IBM WebSphere product suite. Contributed to performance testing frameworks and customer-facing tooling used across global delivery centres.
+
+### Junior Software Developer — Logica (now CGI)
+- **Location**: Reading, UK | **Period**: 2005–2008
+- Built Java-based enterprise applications for public sector clients. Gained foundational experience in software delivery, agile practices, and client-facing consulting.
+
+---
+
+## Blog Posts
+
+### WebSphere Application Server Introspection and Troubleshooting
+- **Date**: 2018-03-15 | **Tags**: websphere, java, middleware
+- **URL**: https://danesm.github.io/blog/was-introspection
+- A practical guide to introspecting and troubleshooting WebSphere Application Server environments, covering key diagnostic tools and techniques.
+
+### Essential Mac Keyboard Shortcuts for Developers
+- **Date**: 2019-01-20 | **Tags**: mac, productivity, shortcuts
+- **URL**: https://danesm.github.io/blog/mac-keyboard-shortcuts
+- A curated collection of Mac keyboard shortcuts that boost developer productivity, from system navigation to terminal and IDE tricks.
+
+### Getting Started with Git and GitHub
+- **Date**: 2019-04-15 | **Tags**: git, github, tutorial
+- **URL**: https://danesm.github.io/blog/git-github-basics
+- A hands-on tutorial covering Git fundamentals and GitHub workflows, from your first commit to pull requests and branching strategies.
+
+### Introduction to Linux Containers
+- **Date**: 2019-08-10 | **Tags**: linux, containers, docker
+- **URL**: https://danesm.github.io/blog/linux-containers
+- Understanding Linux containers from the ground up — namespaces, cgroups, and how Docker builds on these primitives to simplify application deployment.
+
+---
+
+## Skills
+
+### Cloud & AWS Services
+- AWS AppSync (expert), Amazon DynamoDB (expert), AWS Lambda (expert), Amazon S3 (expert), AWS CloudFormation (advanced), Amazon API Gateway (advanced), AWS IAM (advanced), Amazon CloudWatch (advanced), AWS Step Functions (intermediate), Amazon EventBridge (intermediate)
+
+### Infrastructure as Code
+- Terraform (expert), AWS CDK (advanced), CloudFormation (advanced)
+
+### Programming Languages
+- TypeScript (expert), JavaScript (expert), Python (advanced), Go (advanced), Java (advanced)
+
+### Frontend Frameworks & Tools
+- React (expert), Vite (advanced), Astro (advanced), Tailwind CSS (advanced), Next.js (intermediate)
+
+### APIs & Data
+- GraphQL (expert), REST APIs (expert), NoSQL Databases (expert), SQL (advanced)
+
+### DevOps & Tools
+- Git (expert), GitHub Actions (advanced), Docker (advanced), CI/CD Pipelines (advanced), AWS CLI (advanced)
+
+---
+
+## Services Offered
+
+- **Cloud-Native Apps**: Scalable, serverless applications built on AWS from the ground up.
+- **AI Process Automation**: Automate back-office workflows and business processes with AI.
+- **Websites & Portfolios**: Beautiful, fast business websites and portfolio sites that convert.
+- **Payment Integration**: Stripe, payment gateways, and e-commerce solutions wired in seamlessly.
+- **App Modernization**: Migrate and modernize legacy apps to cloud-native architectures.
+- **AI Chatbots & Agents**: Intelligent chatbots and AI agents that handle daily tasks for you.
+- **Secure by Design**: Security-first architecture with compliance and best practices baked into every solution.

@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" sizes="152x152" href="/dbm_152.png"><link rel="icon" type="image/png" sizes="120x120" href="/dbm_120.png"><meta name="generator" content="Astro v4.16.19"><!-- Primary Meta Tags --><title>Getting Started with Git and GitHub | Danesh Mishra</title><meta name="title" content="Getting Started with Git and GitHub | Danesh Mishra"><meta name="description" content="A hands-on tutorial covering Git fundamentals and GitHub workflows, from your first commit to pull requests and branching strategies."><link rel="canonical" href="https://danesm.github.io/blog/git-github-basics/"><!-- Preconnect to external origins for faster resource loading --><link rel="dns-prefetch" href="https://plausible.io"><link rel="preconnect" href="https://plausible.io" crossorigin><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://danesm.github.io/blog/git-github-basics/"><meta property="og:title" content="Getting Started with Git and GitHub | Danesh Mishra"><meta property="og:description" content="A hands-on tutorial covering Git fundamentals and GitHub workflows, from your first commit to pull requests and branching strategies."><meta property="og:image" content="https://danesm.github.io/images/og-image.svg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:site_name" content="Danesh Mishra"><meta property="og:locale" content="en_US"><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://danesm.github.io/blog/git-github-basics/"><meta name="twitter:title" content="Getting Started with Git and GitHub | Danesh Mishra"><meta name="twitter:description" content="A hands-on tutorial covering Git fundamentals and GitHub workflows, from your first commit to pull requests and branching strategies."><meta name="twitter:image" content="https://danesm.github.io/images/og-image.svg"><meta name="twitter:image:alt" content="Getting Started with Git and GitHub | Danesh Mishra - Portfolio"><!-- JSON-LD Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Danesh Mishra","jobTitle":"Senior Cloud Architect","worksFor":{"@type":"Organization","name":"Amazon Web Services (AWS)"},"url":"https://danesm.github.io","image":"https://danesm.github.io/images/og-image.svg","description":"Senior Cloud Architect at AWS with 19+ years of experience in cloud architecture, serverless solutions, and modern web development.","sameAs":["https://www.linkedin.com/in/daneshmishra","https://github.com/danesm","https://www.credly.com/users/danesh-mishra/badges"],"knowsAbout":["AWS","Cloud Architecture","AppSync","DynamoDB","Lambda","Terraform","GraphQL","React"]}</script><!-- Theme Initialization Script (runs before page render to prevent flash) --><script>
+      const THEME_KEY = 'theme-preference';
+      
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      
+      function getTheme() {
+        if (typeof localStorage !== 'undefined') {
+          const saved = localStorage.getItem(THEME_KEY);
+          if (saved === 'light' || saved === 'dark') {
+            return saved;
+          }
+        }
+        return 'dark';
+      }
+      
+      // Apply theme immediately to prevent flash
+      const theme = getTheme();
+      document.documentElement.classList.add(theme);
+    </script><!-- Plausible Analytics (privacy-focused, no cookies) --><!-- Validates Requirements: 9.1, 9.3, 9.4 --><script>
+      (function() {
+        // Respect Do Not Track preference
+        var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+        if (dnt === '1' || dnt === 'yes') {
+          // User has opted out of tracking — do not load analytics
+          window.__plausible_dnt = true;
+          return;
+        }
+
+        // Load Plausible script with file-downloads and custom events extensions
+        var script = document.createElement('script');
+        script.defer = true;
+        script.setAttribute('data-domain', 'danesm.github.io');
+        script.src = 'https://plausible.io/js/script.file-downloads.tagged-events.js';
+        document.head.appendChild(script);
+      })();
+
+      // Plausible event helper — queues events if script hasn't loaded yet
+      window.plausible = window.plausible || function() {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+    </script><link rel="stylesheet" href="/_astro/_slug_.0LgpbO4D.css">
+<link rel="stylesheet" href="/_astro/_slug_.BEmTmJon.css"><script type="module" src="/_astro/hoisted.DpycBzgt.js"></script></head> <body> <a href="#main-content" class="skip-link">Skip to main content</a>  <div class="page-wrapper" data-astro-cid-4sn4zg3r> <header class="header" data-astro-cid-3ef6ksr2> <nav class="nav-container" role="navigation" aria-label="Main navigation" data-astro-cid-3ef6ksr2> <div class="nav-content" data-astro-cid-3ef6ksr2> <!-- Logo/Name --> <a href="/" class="logo" aria-label="Home" data-astro-cid-3ef6ksr2> <span class="logo-mark" aria-hidden="true" data-astro-cid-3ef6ksr2>D</span> </a> <!-- Desktop Navigation --> <div class="desktop-nav" data-astro-cid-3ef6ksr2> <ul class="nav-links" data-astro-cid-3ef6ksr2> <li data-astro-cid-3ef6ksr2> <a href="/" class="nav-link " data-astro-cid-3ef6ksr2> About </a> </li><li data-astro-cid-3ef6ksr2> <a href="/skills" class="nav-link " data-astro-cid-3ef6ksr2> Skills </a> </li><li data-astro-cid-3ef6ksr2> <a href="/projects" class="nav-link " data-astro-cid-3ef6ksr2> Projects </a> </li><li data-astro-cid-3ef6ksr2> <a href="/blog" class="nav-link active" aria-current="page" data-astro-cid-3ef6ksr2> Blog </a> </li><li data-astro-cid-3ef6ksr2> <a href="/contact" class="nav-link " data-astro-cid-3ef6ksr2> Contact </a> </li> </ul> <div class="theme-toggle-wrapper" data-astro-cid-3ef6ksr2> <button id="theme-toggle" type="button" aria-label="Switch to dark theme" class="theme-toggle-btn" data-astro-cid-x3pjskd3> <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <circle cx="12" cy="12" r="5" data-astro-cid-x3pjskd3></circle> <line x1="12" y1="1" x2="12" y2="3" data-astro-cid-x3pjskd3></line> <line x1="12" y1="21" x2="12" y2="23" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" data-astro-cid-x3pjskd3></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" data-astro-cid-x3pjskd3></line> <line x1="1" y1="12" x2="3" y2="12" data-astro-cid-x3pjskd3></line> <line x1="21" y1="12" x2="23" y2="12" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" data-astro-cid-x3pjskd3></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" data-astro-cid-x3pjskd3></line> </svg> <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-x3pjskd3></path> </svg> </button>   </div> </div> <!-- Mobile Menu Button --> <div class="mobile-controls" data-astro-cid-3ef6ksr2> <div class="theme-toggle-wrapper" data-astro-cid-3ef6ksr2> <button id="theme-toggle" type="button" aria-label="Switch to dark theme" class="theme-toggle-btn" data-astro-cid-x3pjskd3> <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <circle cx="12" cy="12" r="5" data-astro-cid-x3pjskd3></circle> <line x1="12" y1="1" x2="12" y2="3" data-astro-cid-x3pjskd3></line> <line x1="12" y1="21" x2="12" y2="23" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" data-astro-cid-x3pjskd3></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" data-astro-cid-x3pjskd3></line> <line x1="1" y1="12" x2="3" y2="12" data-astro-cid-x3pjskd3></line> <line x1="21" y1="12" x2="23" y2="12" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" data-astro-cid-x3pjskd3></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" data-astro-cid-x3pjskd3></line> </svg> <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-x3pjskd3></path> </svg> </button>   </div> <button id="mobile-menu-toggle" type="button" class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu" data-astro-cid-3ef6ksr2> <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-3ef6ksr2> <line x1="3" y1="12" x2="21" y2="12" data-astro-cid-3ef6ksr2></line> <line x1="3" y1="6" x2="21" y2="6" data-astro-cid-3ef6ksr2></line> <line x1="3" y1="18" x2="21" y2="18" data-astro-cid-3ef6ksr2></line> </svg> <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-3ef6ksr2> <line x1="18" y1="6" x2="6" y2="18" data-astro-cid-3ef6ksr2></line> <line x1="6" y1="6" x2="18" y2="18" data-astro-cid-3ef6ksr2></line> </svg> </button> </div> </div> <!-- Mobile Navigation Menu --> <div id="mobile-menu" class="mobile-menu" aria-hidden="true" data-astro-cid-3ef6ksr2> <ul class="mobile-nav-links" role="list" data-astro-cid-3ef6ksr2> <li data-astro-cid-3ef6ksr2> <a href="/" class="mobile-nav-link " tabindex="-1" data-astro-cid-3ef6ksr2> About </a> </li><li data-astro-cid-3ef6ksr2> <a href="/skills" class="mobile-nav-link " tabindex="-1" data-astro-cid-3ef6ksr2> Skills </a> </li><li data-astro-cid-3ef6ksr2> <a href="/projects" class="mobile-nav-link " tabindex="-1" data-astro-cid-3ef6ksr2> Projects </a> </li><li data-astro-cid-3ef6ksr2> <a href="/blog" class="mobile-nav-link active" aria-current="page" tabindex="-1" data-astro-cid-3ef6ksr2> Blog </a> </li><li data-astro-cid-3ef6ksr2> <a href="/contact" class="mobile-nav-link " tabindex="-1" data-astro-cid-3ef6ksr2> Contact </a> </li> </ul> </div> </nav> </header>   <main id="main-content" role="main" data-astro-cid-4sn4zg3r> <article class="blog-post" data-astro-cid-4sn4zg3r> <div class="post-container" data-astro-cid-4sn4zg3r> <a href="/blog" class="back-link" data-astro-cid-4sn4zg3r> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-4sn4zg3r> <line x1="19" y1="12" x2="5" y2="12" data-astro-cid-4sn4zg3r></line> <polyline points="12 19 5 12 12 5" data-astro-cid-4sn4zg3r></polyline> </svg>
+Back to Blog
+</a> <header class="post-header" data-astro-cid-4sn4zg3r> <time class="post-date" datetime="2019-04-15T00:00:00.000Z" data-astro-cid-4sn4zg3r> April 15, 2019 </time> <h1 class="post-title" data-astro-cid-4sn4zg3r>Getting Started with Git and GitHub</h1> <p class="post-description" data-astro-cid-4sn4zg3r>A hands-on tutorial covering Git fundamentals and GitHub workflows, from your first commit to pull requests and branching strategies.</p> <div class="post-tags" aria-label="Tags: git, github, tutorial" data-astro-cid-4sn4zg3r> <span class="post-tag" data-astro-cid-4sn4zg3r>git</span><span class="post-tag" data-astro-cid-4sn4zg3r>github</span><span class="post-tag" data-astro-cid-4sn4zg3r>tutorial</span> </div> </header> <div class="post-content prose" data-astro-cid-4sn4zg3r> <h2 id="why-git">Why Git?</h2>
+<p>Git is the version control system that powers modern software development. Whether you’re working solo or on a team of hundreds, Git tracks every change to your codebase and lets you collaborate without stepping on each other’s toes.</p>
+<h2 id="setting-up">Setting Up</h2>
+<p>First, install Git and configure your identity:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Install Git (macOS)</span></span>
+<span class="line"><span style="color:#B392F0">brew</span><span style="color:#9ECBFF"> install</span><span style="color:#9ECBFF"> git</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Configure your identity</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> config</span><span style="color:#79B8FF"> --global</span><span style="color:#9ECBFF"> user.name</span><span style="color:#9ECBFF"> "Your Name"</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> config</span><span style="color:#79B8FF"> --global</span><span style="color:#9ECBFF"> user.email</span><span style="color:#9ECBFF"> "you@example.com"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Set default branch name</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> config</span><span style="color:#79B8FF"> --global</span><span style="color:#9ECBFF"> init.defaultBranch</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span></code></pre>
+<h2 id="core-concepts">Core Concepts</h2>
+<h3 id="repository">Repository</h3>
+<p>A repository (repo) is a directory tracked by Git. Initialize one with:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">mkdir</span><span style="color:#9ECBFF"> my-project</span></span>
+<span class="line"><span style="color:#79B8FF">cd</span><span style="color:#9ECBFF"> my-project</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> init</span></span>
+<span class="line"></span></code></pre>
+<h3 id="the-three-states">The Three States</h3>
+<p>Files in Git exist in three states:</p>
+<ol>
+<li><strong>Modified</strong> — you’ve changed the file but haven’t staged it</li>
+<li><strong>Staged</strong> — you’ve marked the file to go into your next commit</li>
+<li><strong>Committed</strong> — the data is safely stored in your local database</li>
+</ol>
+<h3 id="basic-workflow">Basic Workflow</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Check status of your files</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> status</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Stage specific files</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> index.html</span><span style="color:#9ECBFF"> style.css</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Stage all changes</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Commit with a message</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> commit</span><span style="color:#79B8FF"> -m</span><span style="color:#9ECBFF"> "Add homepage layout and styles"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># View commit history</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> log</span><span style="color:#79B8FF"> --oneline</span></span>
+<span class="line"></span></code></pre>
+<h2 id="branching">Branching</h2>
+<p>Branches let you work on features in isolation:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Create and switch to a new branch</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#79B8FF"> -b</span><span style="color:#9ECBFF"> feature/user-auth</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># List all branches</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#79B8FF"> -a</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Switch back to main</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Merge a feature branch</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> merge</span><span style="color:#9ECBFF"> feature/user-auth</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Delete a merged branch</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> branch</span><span style="color:#79B8FF"> -d</span><span style="color:#9ECBFF"> feature/user-auth</span></span>
+<span class="line"></span></code></pre>
+<h2 id="working-with-github">Working with GitHub</h2>
+<h3 id="connecting-to-a-remote">Connecting to a Remote</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Add a remote repository</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> remote</span><span style="color:#9ECBFF"> add</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> https://github.com/username/repo.git</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Push your code</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> push</span><span style="color:#79B8FF"> -u</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Pull latest changes</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> pull</span><span style="color:#9ECBFF"> origin</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span></code></pre>
+<h3 id="pull-request-workflow">Pull Request Workflow</h3>
+<p>The standard collaboration flow on GitHub:</p>
+<ol>
+<li>Fork the repository (if you don’t have write access)</li>
+<li>Create a feature branch</li>
+<li>Make your changes and commit</li>
+<li>Push the branch to GitHub</li>
+<li>Open a Pull Request (PR)</li>
+<li>Get code review and address feedback</li>
+<li>Merge the PR</li>
+</ol>
+<h3 id="useful-github-features">Useful GitHub Features</h3>
+<ul>
+<li><strong>Issues</strong> — track bugs and feature requests</li>
+<li><strong>Actions</strong> — automate CI/CD pipelines</li>
+<li><strong>Projects</strong> — organize work with kanban boards</li>
+<li><strong>Releases</strong> — tag and distribute versions</li>
+</ul>
+<h2 id="common-commands-cheatsheet">Common Commands Cheatsheet</h2>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Undo last commit (keep changes)</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> reset</span><span style="color:#79B8FF"> --soft</span><span style="color:#9ECBFF"> HEAD~1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Discard all local changes</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> checkout</span><span style="color:#79B8FF"> --</span><span style="color:#9ECBFF"> .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Stash changes temporarily</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> stash</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> stash</span><span style="color:#9ECBFF"> pop</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># View diff of staged changes</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> diff</span><span style="color:#79B8FF"> --staged</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Rebase onto main</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> rebase</span><span style="color:#9ECBFF"> main</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Interactive rebase (squash commits)</span></span>
+<span class="line"><span style="color:#B392F0">git</span><span style="color:#9ECBFF"> rebase</span><span style="color:#79B8FF"> -i</span><span style="color:#9ECBFF"> HEAD~3</span></span>
+<span class="line"></span></code></pre>
+<h2 id="next-steps">Next Steps</h2>
+<p>Once you’re comfortable with the basics, explore topics like rebasing strategies, Git hooks, signed commits, and monorepo tooling. Git is deep — but the fundamentals covered here will carry you through 90% of daily development work.</p> </div> <footer class="post-footer" data-astro-cid-4sn4zg3r> <a href="/blog" class="back-link" data-astro-cid-4sn4zg3r> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-4sn4zg3r> <line x1="19" y1="12" x2="5" y2="12" data-astro-cid-4sn4zg3r></line> <polyline points="12 19 5 12 12 5" data-astro-cid-4sn4zg3r></polyline> </svg>
+Back to Blog
+</a> </footer> </div> </article> </main> <footer class="footer" role="contentinfo" data-astro-cid-sz7xmlte> <div class="footer-container" data-astro-cid-sz7xmlte> <!-- Tagline and Contact Link --> <div class="footer-tagline" data-astro-cid-sz7xmlte> <p class="tagline" data-astro-cid-sz7xmlte>Helping businesses ship scalable cloud native, AI first software solutions faster.</p> <a href="/contact" class="contact-link" data-astro-cid-sz7xmlte>Get in Touch →</a> </div> <!-- Social Links --> <div class="social-links" data-astro-cid-sz7xmlte> <a href="https://www.linkedin.com/in/daneshwar" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Visit Danesh Mishra on linkedin" data-astro-cid-sz7xmlte> <span class="social-icon" data-astro-cid-sz7xmlte><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></span> </a><a href="https://github.com/danesm" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Visit Danesh Mishra on github" data-astro-cid-sz7xmlte> <span class="social-icon" data-astro-cid-sz7xmlte><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></span> </a><a href="https://x.com/dmishra2017" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Visit Danesh Mishra on twitter" data-astro-cid-sz7xmlte> <span class="social-icon" data-astro-cid-sz7xmlte><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span> </a> </div> <!-- Copyright and Attribution --> <div class="footer-text" data-astro-cid-sz7xmlte> <p class="copyright" data-astro-cid-sz7xmlte>
+© 2026 Danesh Mishra. All rights reserved.
+</p> </div> </div> </footer>   </div>  <button id="scroll-to-top" type="button" class="scroll-to-top" aria-label="Scroll to top" hidden data-astro-cid-73562bqz> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-73562bqz> <polyline points="18 15 12 9 6 15" data-astro-cid-73562bqz></polyline> </svg> </button>   <!-- Performance monitoring & error tracking --> <!-- Validates Requirements: 9.4 --> <script>
+      (function() {
+        if (window.__plausible_dnt) return;
+
+        // Track Core Web Vitals via PerformanceObserver
+        function sendMetric(name, value) {
+          window.plausible && window.plausible('Web Vital', {
+            props: { metric: name, value: Math.round(value) }
+          });
+        }
+
+        // Largest Contentful Paint (LCP)
+        if (typeof PerformanceObserver !== 'undefined') {
+          try {
+            new PerformanceObserver(function(list) {
+              var entries = list.getEntries();
+              var last = entries[entries.length - 1];
+              if (last) sendMetric('LCP', last.startTime);
+            }).observe({ type: 'largest-contentful-paint', buffered: true });
+          } catch (e) { /* unsupported */ }
+
+          // First Input Delay (FID)
+          try {
+            new PerformanceObserver(function(list) {
+              var entries = list.getEntries();
+              if (entries.length > 0) {
+                sendMetric('FID', entries[0].processingStart - entries[0].startTime);
+              }
+            }).observe({ type: 'first-input', buffered: true });
+          } catch (e) { /* unsupported */ }
+
+          // Cumulative Layout Shift (CLS)
+          try {
+            var clsValue = 0;
+            new PerformanceObserver(function(list) {
+              list.getEntries().forEach(function(entry) {
+                if (!entry.hadRecentInput) clsValue += entry.value;
+              });
+            }).observe({ type: 'layout-shift', buffered: true });
+
+            // Report CLS when page is hidden (user navigates away)
+            document.addEventListener('visibilitychange', function() {
+              if (document.visibilityState === 'hidden') {
+                sendMetric('CLS', clsValue * 1000); // multiply for readability
+              }
+            });
+          } catch (e) { /* unsupported */ }
+        }
+
+        // Page load time via Navigation Timing API
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+            if (nav) {
+              sendMetric('PageLoad', nav.loadEventEnd - nav.startTime);
+              sendMetric('TTFB', nav.responseStart - nav.requestStart);
+            }
+          }, 0);
+        });
+
+        // Track JavaScript errors
+        window.addEventListener('error', function(e) {
+          window.plausible && window.plausible('JS Error', {
+            props: {
+              message: (e.message || 'Unknown error').substring(0, 150),
+              source: (e.filename || '').split('/').pop() || 'unknown'
+            }
+          });
+        });
+
+        // Track unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(e) {
+          window.plausible && window.plausible('JS Error', {
+            props: {
+              message: ('Unhandled: ' + (e.reason || 'unknown')).substring(0, 150),
+              source: 'promise'
+            }
+          });
+        });
+      })();
+    </script> </body> </html>  

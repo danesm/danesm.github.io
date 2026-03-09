@@ -1,0 +1,142 @@
+---
+import ScrollToTop from '../components/ScrollToTop.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  canonicalURL?: string;
+}
+
+const { title, description, ogImage, canonicalURL } = Astro.props;
+
+const siteUrl = 'https://danesm.github.io';
+const defaultOgImage = `${siteUrl}/images/og-image.svg`;
+const fullTitle = title === 'Home' ? 'Danesh Mishra - Senior Cloud Architect' : `${title} | Danesh Mishra`;
+const canonical = canonicalURL || `${siteUrl}${Astro.url.pathname}`;
+const ogImageUrl = ogImage || defaultOgImage;
+
+// Professional information for structured data
+const professionalInfo = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": "Danesh Mishra",
+  "jobTitle": "Senior Cloud Architect",
+  "worksFor": {
+    "@type": "Organization",
+    "name": "Amazon Web Services (AWS)"
+  },
+  "url": siteUrl,
+  "image": `${siteUrl}/images/og-image.svg`,
+  "description": "Senior Cloud Architect at AWS with 19+ years of experience in cloud architecture, serverless solutions, and modern web development.",
+  "sameAs": [
+    "https://www.linkedin.com/in/daneshmishra",
+    "https://github.com/danesm",
+    "https://www.credly.com/users/danesh-mishra/badges"
+  ],
+  "knowsAbout": [
+    "AWS",
+    "Cloud Architecture",
+    "AppSync",
+    "DynamoDB",
+    "Lambda",
+    "Terraform",
+    "GraphQL",
+    "React"
+  ]
+};
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/dbm_152.png" />
+    <link rel="icon" type="image/png" sizes="120x120" href="/dbm_120.png" />
+    <meta name="generator" content={Astro.generator} />
+    
+    <!-- Primary Meta Tags -->
+    <title>{fullTitle}</title>
+    <meta name="title" content={fullTitle} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    
+    <!-- Preconnect to external origins for faster resource loading -->
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Danesh Mishra" />
+    <meta property="og:locale" content="en_US" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonical} />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={`${fullTitle} - Portfolio`} />
+    
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json" set:html={JSON.stringify(professionalInfo)} />
+    
+    <!-- Theme Initialization Script (runs before page render to prevent flash) -->
+    <script is:inline>
+      const THEME_KEY = 'theme-preference';
+      
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      
+      function getTheme() {
+        if (typeof localStorage !== 'undefined') {
+          const saved = localStorage.getItem(THEME_KEY);
+          if (saved === 'light' || saved === 'dark') {
+            return saved;
+          }
+        }
+        return 'dark';
+      }
+      
+      // Apply theme immediately to prevent flash
+      const theme = getTheme();
+      document.documentElement.classList.add(theme);
+    </script>
+
+    <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c615099cb30043b89a103793d9ba05d1"}'></script><!-- End Cloudflare Web Analytics -->
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    <slot />
+    <ScrollToTop />
+
+  </body>
+</html>
+
+<style is:global>
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 100;
+    padding: 0.75rem 1.5rem;
+    background-color: #2563eb;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border-radius: 0 0 8px 8px;
+    text-decoration: none;
+    transition: top 0.2s ease;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+</style>

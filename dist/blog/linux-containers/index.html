@@ -1,0 +1,260 @@
+<!DOCTYPE html><html lang="en"> <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="icon" type="image/x-icon" href="/favicon.ico"><link rel="apple-touch-icon" sizes="152x152" href="/dbm_152.png"><link rel="icon" type="image/png" sizes="120x120" href="/dbm_120.png"><meta name="generator" content="Astro v4.16.19"><!-- Primary Meta Tags --><title>Introduction to Linux Containers | Danesh Mishra</title><meta name="title" content="Introduction to Linux Containers | Danesh Mishra"><meta name="description" content="Understanding Linux containers from the ground up — namespaces, cgroups, and how Docker builds on these primitives to simplify application deployment."><link rel="canonical" href="https://danesm.github.io/blog/linux-containers/"><!-- Preconnect to external origins for faster resource loading --><link rel="dns-prefetch" href="https://plausible.io"><link rel="preconnect" href="https://plausible.io" crossorigin><!-- Open Graph / Facebook --><meta property="og:type" content="website"><meta property="og:url" content="https://danesm.github.io/blog/linux-containers/"><meta property="og:title" content="Introduction to Linux Containers | Danesh Mishra"><meta property="og:description" content="Understanding Linux containers from the ground up — namespaces, cgroups, and how Docker builds on these primitives to simplify application deployment."><meta property="og:image" content="https://danesm.github.io/images/og-image.svg"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:site_name" content="Danesh Mishra"><meta property="og:locale" content="en_US"><!-- Twitter Card --><meta name="twitter:card" content="summary_large_image"><meta name="twitter:url" content="https://danesm.github.io/blog/linux-containers/"><meta name="twitter:title" content="Introduction to Linux Containers | Danesh Mishra"><meta name="twitter:description" content="Understanding Linux containers from the ground up — namespaces, cgroups, and how Docker builds on these primitives to simplify application deployment."><meta name="twitter:image" content="https://danesm.github.io/images/og-image.svg"><meta name="twitter:image:alt" content="Introduction to Linux Containers | Danesh Mishra - Portfolio"><!-- JSON-LD Structured Data --><script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Danesh Mishra","jobTitle":"Senior Cloud Architect","worksFor":{"@type":"Organization","name":"Amazon Web Services (AWS)"},"url":"https://danesm.github.io","image":"https://danesm.github.io/images/og-image.svg","description":"Senior Cloud Architect at AWS with 19+ years of experience in cloud architecture, serverless solutions, and modern web development.","sameAs":["https://www.linkedin.com/in/daneshmishra","https://github.com/danesm","https://www.credly.com/users/danesh-mishra/badges"],"knowsAbout":["AWS","Cloud Architecture","AppSync","DynamoDB","Lambda","Terraform","GraphQL","React"]}</script><!-- Theme Initialization Script (runs before page render to prevent flash) --><script>
+      const THEME_KEY = 'theme-preference';
+      
+      function getSystemTheme() {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      
+      function getTheme() {
+        if (typeof localStorage !== 'undefined') {
+          const saved = localStorage.getItem(THEME_KEY);
+          if (saved === 'light' || saved === 'dark') {
+            return saved;
+          }
+        }
+        return 'dark';
+      }
+      
+      // Apply theme immediately to prevent flash
+      const theme = getTheme();
+      document.documentElement.classList.add(theme);
+    </script><!-- Plausible Analytics (privacy-focused, no cookies) --><!-- Validates Requirements: 9.1, 9.3, 9.4 --><script>
+      (function() {
+        // Respect Do Not Track preference
+        var dnt = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+        if (dnt === '1' || dnt === 'yes') {
+          // User has opted out of tracking — do not load analytics
+          window.__plausible_dnt = true;
+          return;
+        }
+
+        // Load Plausible script with file-downloads and custom events extensions
+        var script = document.createElement('script');
+        script.defer = true;
+        script.setAttribute('data-domain', 'danesm.github.io');
+        script.src = 'https://plausible.io/js/script.file-downloads.tagged-events.js';
+        document.head.appendChild(script);
+      })();
+
+      // Plausible event helper — queues events if script hasn't loaded yet
+      window.plausible = window.plausible || function() {
+        (window.plausible.q = window.plausible.q || []).push(arguments);
+      };
+    </script><link rel="stylesheet" href="/_astro/_slug_.0LgpbO4D.css">
+<link rel="stylesheet" href="/_astro/_slug_.BEmTmJon.css"><script type="module" src="/_astro/hoisted.DpycBzgt.js"></script></head> <body> <a href="#main-content" class="skip-link">Skip to main content</a>  <div class="page-wrapper" data-astro-cid-4sn4zg3r> <header class="header" data-astro-cid-3ef6ksr2> <nav class="nav-container" role="navigation" aria-label="Main navigation" data-astro-cid-3ef6ksr2> <div class="nav-content" data-astro-cid-3ef6ksr2> <!-- Logo/Name --> <a href="/" class="logo" aria-label="Home" data-astro-cid-3ef6ksr2> <span class="logo-mark" aria-hidden="true" data-astro-cid-3ef6ksr2>D</span> </a> <!-- Desktop Navigation --> <div class="desktop-nav" data-astro-cid-3ef6ksr2> <ul class="nav-links" data-astro-cid-3ef6ksr2> <li data-astro-cid-3ef6ksr2> <a href="/" class="nav-link " data-astro-cid-3ef6ksr2> About </a> </li><li data-astro-cid-3ef6ksr2> <a href="/skills" class="nav-link " data-astro-cid-3ef6ksr2> Skills </a> </li><li data-astro-cid-3ef6ksr2> <a href="/projects" class="nav-link " data-astro-cid-3ef6ksr2> Projects </a> </li><li data-astro-cid-3ef6ksr2> <a href="/blog" class="nav-link active" aria-current="page" data-astro-cid-3ef6ksr2> Blog </a> </li><li data-astro-cid-3ef6ksr2> <a href="/contact" class="nav-link " data-astro-cid-3ef6ksr2> Contact </a> </li> </ul> <div class="theme-toggle-wrapper" data-astro-cid-3ef6ksr2> <button id="theme-toggle" type="button" aria-label="Switch to dark theme" class="theme-toggle-btn" data-astro-cid-x3pjskd3> <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <circle cx="12" cy="12" r="5" data-astro-cid-x3pjskd3></circle> <line x1="12" y1="1" x2="12" y2="3" data-astro-cid-x3pjskd3></line> <line x1="12" y1="21" x2="12" y2="23" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" data-astro-cid-x3pjskd3></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" data-astro-cid-x3pjskd3></line> <line x1="1" y1="12" x2="3" y2="12" data-astro-cid-x3pjskd3></line> <line x1="21" y1="12" x2="23" y2="12" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" data-astro-cid-x3pjskd3></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" data-astro-cid-x3pjskd3></line> </svg> <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-x3pjskd3></path> </svg> </button>   </div> </div> <!-- Mobile Menu Button --> <div class="mobile-controls" data-astro-cid-3ef6ksr2> <div class="theme-toggle-wrapper" data-astro-cid-3ef6ksr2> <button id="theme-toggle" type="button" aria-label="Switch to dark theme" class="theme-toggle-btn" data-astro-cid-x3pjskd3> <svg class="sun-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <circle cx="12" cy="12" r="5" data-astro-cid-x3pjskd3></circle> <line x1="12" y1="1" x2="12" y2="3" data-astro-cid-x3pjskd3></line> <line x1="12" y1="21" x2="12" y2="23" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" data-astro-cid-x3pjskd3></line> <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" data-astro-cid-x3pjskd3></line> <line x1="1" y1="12" x2="3" y2="12" data-astro-cid-x3pjskd3></line> <line x1="21" y1="12" x2="23" y2="12" data-astro-cid-x3pjskd3></line> <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" data-astro-cid-x3pjskd3></line> <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" data-astro-cid-x3pjskd3></line> </svg> <svg class="moon-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-x3pjskd3> <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" data-astro-cid-x3pjskd3></path> </svg> </button>   </div> <button id="mobile-menu-toggle" type="button" class="mobile-menu-btn" aria-label="Toggle menu" aria-expanded="false" aria-controls="mobile-menu" data-astro-cid-3ef6ksr2> <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-3ef6ksr2> <line x1="3" y1="12" x2="21" y2="12" data-astro-cid-3ef6ksr2></line> <line x1="3" y1="6" x2="21" y2="6" data-astro-cid-3ef6ksr2></line> <line x1="3" y1="18" x2="21" y2="18" data-astro-cid-3ef6ksr2></line> </svg> <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-astro-cid-3ef6ksr2> <line x1="18" y1="6" x2="6" y2="18" data-astro-cid-3ef6ksr2></line> <line x1="6" y1="6" x2="18" y2="18" data-astro-cid-3ef6ksr2></line> </svg> </button> </div> </div> <!-- Mobile Navigation Menu --> <div id="mobile-menu" class="mobile-menu" aria-hidden="true" data-astro-cid-3ef6ksr2> <ul class="mobile-nav-links" role="list" data-astro-cid-3ef6ksr2> <li data-astro-cid-3ef6ksr2> <a href="/" class="mobile-nav-link " tabindex="-1" data-astro-cid-3ef6ksr2> About </a> </li><li data-astro-cid-3ef6ksr2> <a href="/skills" class="mobile-nav-link " tabindex="-1" data-astro-cid-3ef6ksr2> Skills </a> </li><li data-astro-cid-3ef6ksr2> <a href="/projects" class="mobile-nav-link " tabindex="-1" data-astro-cid-3ef6ksr2> Projects </a> </li><li data-astro-cid-3ef6ksr2> <a href="/blog" class="mobile-nav-link active" aria-current="page" tabindex="-1" data-astro-cid-3ef6ksr2> Blog </a> </li><li data-astro-cid-3ef6ksr2> <a href="/contact" class="mobile-nav-link " tabindex="-1" data-astro-cid-3ef6ksr2> Contact </a> </li> </ul> </div> </nav> </header>   <main id="main-content" role="main" data-astro-cid-4sn4zg3r> <article class="blog-post" data-astro-cid-4sn4zg3r> <div class="post-container" data-astro-cid-4sn4zg3r> <a href="/blog" class="back-link" data-astro-cid-4sn4zg3r> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-4sn4zg3r> <line x1="19" y1="12" x2="5" y2="12" data-astro-cid-4sn4zg3r></line> <polyline points="12 19 5 12 12 5" data-astro-cid-4sn4zg3r></polyline> </svg>
+Back to Blog
+</a> <header class="post-header" data-astro-cid-4sn4zg3r> <time class="post-date" datetime="2019-08-10T00:00:00.000Z" data-astro-cid-4sn4zg3r> August 10, 2019 </time> <h1 class="post-title" data-astro-cid-4sn4zg3r>Introduction to Linux Containers</h1> <p class="post-description" data-astro-cid-4sn4zg3r>Understanding Linux containers from the ground up — namespaces, cgroups, and how Docker builds on these primitives to simplify application deployment.</p> <div class="post-tags" aria-label="Tags: linux, containers, docker" data-astro-cid-4sn4zg3r> <span class="post-tag" data-astro-cid-4sn4zg3r>linux</span><span class="post-tag" data-astro-cid-4sn4zg3r>containers</span><span class="post-tag" data-astro-cid-4sn4zg3r>docker</span> </div> </header> <div class="post-content prose" data-astro-cid-4sn4zg3r> <h2 id="what-are-containers">What Are Containers?</h2>
+<p>Containers are lightweight, isolated environments for running applications. Unlike virtual machines, containers share the host OS kernel, making them fast to start and efficient with resources.</p>
+<p>Think of a container as a process (or group of processes) that has its own isolated view of the system — its own filesystem, network stack, and process tree.</p>
+<h2 id="the-building-blocks">The Building Blocks</h2>
+<p>Linux containers are built on two kernel features: namespaces and cgroups.</p>
+<h3 id="namespaces">Namespaces</h3>
+<p>Namespaces provide isolation. Each namespace type isolates a different aspect of the system:</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>Namespace</th><th>Isolates</th></tr></thead><tbody><tr><td><code>pid</code></td><td>Process IDs</td></tr><tr><td><code>net</code></td><td>Network interfaces and routing</td></tr><tr><td><code>mnt</code></td><td>Filesystem mount points</td></tr><tr><td><code>uts</code></td><td>Hostname and domain name</td></tr><tr><td><code>ipc</code></td><td>Inter-process communication</td></tr><tr><td><code>user</code></td><td>User and group IDs</td></tr></tbody></table>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># List namespaces for a process</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#79B8FF"> -la</span><span style="color:#9ECBFF"> /proc/</span><span style="color:#79B8FF">$$</span><span style="color:#9ECBFF">/ns/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Run a command in a new namespace</span></span>
+<span class="line"><span style="color:#B392F0">unshare</span><span style="color:#79B8FF"> --pid</span><span style="color:#79B8FF"> --fork</span><span style="color:#79B8FF"> --mount-proc</span><span style="color:#9ECBFF"> bash</span></span>
+<span class="line"></span></code></pre>
+<h3 id="control-groups-cgroups">Control Groups (cgroups)</h3>
+<p>Cgroups limit and account for resource usage:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># View cgroup hierarchy</span></span>
+<span class="line"><span style="color:#B392F0">ls</span><span style="color:#9ECBFF"> /sys/fs/cgroup/</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check memory limit for a cgroup</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> /sys/fs/cgroup/memory/docker/</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">container_i</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span><span style="color:#9ECBFF">/memory.limit_in_bytes</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Check CPU usage</span></span>
+<span class="line"><span style="color:#B392F0">cat</span><span style="color:#9ECBFF"> /sys/fs/cgroup/cpu/docker/</span><span style="color:#F97583">&#x3C;</span><span style="color:#9ECBFF">container_i</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span><span style="color:#9ECBFF">/cpuacct.usage</span></span>
+<span class="line"></span></code></pre>
+<h2 id="docker-containers-made-simple">Docker: Containers Made Simple</h2>
+<p>Docker wraps these Linux primitives into a developer-friendly workflow.</p>
+<h3 id="key-concepts">Key Concepts</h3>
+<ul>
+<li><strong>Image</strong> — a read-only template with your application and dependencies</li>
+<li><strong>Container</strong> — a running instance of an image</li>
+<li><strong>Dockerfile</strong> — instructions for building an image</li>
+<li><strong>Registry</strong> — a repository for sharing images (e.g., Docker Hub)</li>
+</ul>
+<h3 id="your-first-container">Your First Container</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Pull and run an image</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> run</span><span style="color:#79B8FF"> -it</span><span style="color:#9ECBFF"> ubuntu:22.04</span><span style="color:#9ECBFF"> bash</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># List running containers</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> ps</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># List all containers (including stopped)</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> ps</span><span style="color:#79B8FF"> -a</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Stop a container</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> stop</span><span style="color:#F97583"> &#x3C;</span><span style="color:#9ECBFF">container_i</span><span style="color:#E1E4E8">d</span><span style="color:#F97583">></span></span>
+<span class="line"></span></code></pre>
+<h3 id="writing-a-dockerfile">Writing a Dockerfile</h3>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="dockerfile"><code><span class="line"><span style="color:#F97583">FROM</span><span style="color:#E1E4E8"> node:20-alpine</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">WORKDIR</span><span style="color:#E1E4E8"> /app</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">COPY</span><span style="color:#E1E4E8"> package*.json ./</span></span>
+<span class="line"><span style="color:#F97583">RUN</span><span style="color:#E1E4E8"> npm ci --production</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">COPY</span><span style="color:#E1E4E8"> . .</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#F97583">EXPOSE</span><span style="color:#E1E4E8"> 3000</span></span>
+<span class="line"><span style="color:#F97583">CMD</span><span style="color:#E1E4E8"> [</span><span style="color:#9ECBFF">"node"</span><span style="color:#E1E4E8">, </span><span style="color:#9ECBFF">"server.js"</span><span style="color:#E1E4E8">]</span></span>
+<span class="line"></span></code></pre>
+<p>Build and run it:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> build</span><span style="color:#79B8FF"> -t</span><span style="color:#9ECBFF"> my-app</span><span style="color:#9ECBFF"> .</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> run</span><span style="color:#79B8FF"> -p</span><span style="color:#9ECBFF"> 3000:3000</span><span style="color:#9ECBFF"> my-app</span></span>
+<span class="line"></span></code></pre>
+<h2 id="container-networking">Container Networking</h2>
+<p>Docker creates a virtual network bridge by default:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># List networks</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> network</span><span style="color:#9ECBFF"> ls</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Create a custom network</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> network</span><span style="color:#9ECBFF"> create</span><span style="color:#9ECBFF"> my-network</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Run containers on the same network</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> run</span><span style="color:#79B8FF"> --network</span><span style="color:#9ECBFF"> my-network</span><span style="color:#79B8FF"> --name</span><span style="color:#9ECBFF"> api</span><span style="color:#9ECBFF"> my-api</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> run</span><span style="color:#79B8FF"> --network</span><span style="color:#9ECBFF"> my-network</span><span style="color:#79B8FF"> --name</span><span style="color:#9ECBFF"> web</span><span style="color:#9ECBFF"> my-web</span></span>
+<span class="line"></span></code></pre>
+<p>Containers on the same network can reach each other by name — <code>web</code> can call <code>http://api:3000</code>.</p>
+<h2 id="volumes-and-data-persistence">Volumes and Data Persistence</h2>
+<p>Containers are ephemeral by default. Use volumes to persist data:</p>
+<pre class="astro-code github-dark" style="background-color:#24292e;color:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><code><span class="line"><span style="color:#6A737D"># Create a named volume</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> volume</span><span style="color:#9ECBFF"> create</span><span style="color:#9ECBFF"> my-data</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Mount it to a container</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> run</span><span style="color:#79B8FF"> -v</span><span style="color:#9ECBFF"> my-data:/app/data</span><span style="color:#9ECBFF"> my-app</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D"># Bind mount a host directory</span></span>
+<span class="line"><span style="color:#B392F0">docker</span><span style="color:#9ECBFF"> run</span><span style="color:#79B8FF"> -v</span><span style="color:#E1E4E8"> $(</span><span style="color:#79B8FF">pwd</span><span style="color:#E1E4E8">)</span><span style="color:#9ECBFF">/config:/app/config</span><span style="color:#9ECBFF"> my-app</span></span>
+<span class="line"></span></code></pre>
+<h2 id="when-to-use-containers">When to Use Containers</h2>
+<p>Containers shine when you need:</p>
+<ul>
+<li><strong>Consistent environments</strong> — “works on my machine” becomes “works everywhere”</li>
+<li><strong>Fast scaling</strong> — spin up new instances in seconds</li>
+<li><strong>Microservices</strong> — isolate services with their own dependencies</li>
+<li><strong>CI/CD pipelines</strong> — reproducible build and test environments</li>
+</ul>
+<h2 id="whats-next">What’s Next</h2>
+<p>Once you’re comfortable with single containers, explore Docker Compose for multi-container applications, then move on to orchestration with Kubernetes or Amazon ECS for production workloads. The container ecosystem is vast, but these fundamentals are the foundation everything else builds on.</p> </div> <footer class="post-footer" data-astro-cid-4sn4zg3r> <a href="/blog" class="back-link" data-astro-cid-4sn4zg3r> <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-4sn4zg3r> <line x1="19" y1="12" x2="5" y2="12" data-astro-cid-4sn4zg3r></line> <polyline points="12 19 5 12 12 5" data-astro-cid-4sn4zg3r></polyline> </svg>
+Back to Blog
+</a> </footer> </div> </article> </main> <footer class="footer" role="contentinfo" data-astro-cid-sz7xmlte> <div class="footer-container" data-astro-cid-sz7xmlte> <!-- Tagline and Contact Link --> <div class="footer-tagline" data-astro-cid-sz7xmlte> <p class="tagline" data-astro-cid-sz7xmlte>Helping businesses ship scalable cloud native, AI first software solutions faster.</p> <a href="/contact" class="contact-link" data-astro-cid-sz7xmlte>Get in Touch →</a> </div> <!-- Social Links --> <div class="social-links" data-astro-cid-sz7xmlte> <a href="https://www.linkedin.com/in/daneshwar" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Visit Danesh Mishra on linkedin" data-astro-cid-sz7xmlte> <span class="social-icon" data-astro-cid-sz7xmlte><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></span> </a><a href="https://github.com/danesm" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Visit Danesh Mishra on github" data-astro-cid-sz7xmlte> <span class="social-icon" data-astro-cid-sz7xmlte><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></span> </a><a href="https://x.com/dmishra2017" target="_blank" rel="noopener noreferrer" class="social-link" aria-label="Visit Danesh Mishra on twitter" data-astro-cid-sz7xmlte> <span class="social-icon" data-astro-cid-sz7xmlte><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></span> </a> </div> <!-- Copyright and Attribution --> <div class="footer-text" data-astro-cid-sz7xmlte> <p class="copyright" data-astro-cid-sz7xmlte>
+© 2026 Danesh Mishra. All rights reserved.
+</p> </div> </div> </footer>   </div>  <button id="scroll-to-top" type="button" class="scroll-to-top" aria-label="Scroll to top" hidden data-astro-cid-73562bqz> <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" data-astro-cid-73562bqz> <polyline points="18 15 12 9 6 15" data-astro-cid-73562bqz></polyline> </svg> </button>   <!-- Performance monitoring & error tracking --> <!-- Validates Requirements: 9.4 --> <script>
+      (function() {
+        if (window.__plausible_dnt) return;
+
+        // Track Core Web Vitals via PerformanceObserver
+        function sendMetric(name, value) {
+          window.plausible && window.plausible('Web Vital', {
+            props: { metric: name, value: Math.round(value) }
+          });
+        }
+
+        // Largest Contentful Paint (LCP)
+        if (typeof PerformanceObserver !== 'undefined') {
+          try {
+            new PerformanceObserver(function(list) {
+              var entries = list.getEntries();
+              var last = entries[entries.length - 1];
+              if (last) sendMetric('LCP', last.startTime);
+            }).observe({ type: 'largest-contentful-paint', buffered: true });
+          } catch (e) { /* unsupported */ }
+
+          // First Input Delay (FID)
+          try {
+            new PerformanceObserver(function(list) {
+              var entries = list.getEntries();
+              if (entries.length > 0) {
+                sendMetric('FID', entries[0].processingStart - entries[0].startTime);
+              }
+            }).observe({ type: 'first-input', buffered: true });
+          } catch (e) { /* unsupported */ }
+
+          // Cumulative Layout Shift (CLS)
+          try {
+            var clsValue = 0;
+            new PerformanceObserver(function(list) {
+              list.getEntries().forEach(function(entry) {
+                if (!entry.hadRecentInput) clsValue += entry.value;
+              });
+            }).observe({ type: 'layout-shift', buffered: true });
+
+            // Report CLS when page is hidden (user navigates away)
+            document.addEventListener('visibilitychange', function() {
+              if (document.visibilityState === 'hidden') {
+                sendMetric('CLS', clsValue * 1000); // multiply for readability
+              }
+            });
+          } catch (e) { /* unsupported */ }
+        }
+
+        // Page load time via Navigation Timing API
+        window.addEventListener('load', function() {
+          setTimeout(function() {
+            var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+            if (nav) {
+              sendMetric('PageLoad', nav.loadEventEnd - nav.startTime);
+              sendMetric('TTFB', nav.responseStart - nav.requestStart);
+            }
+          }, 0);
+        });
+
+        // Track JavaScript errors
+        window.addEventListener('error', function(e) {
+          window.plausible && window.plausible('JS Error', {
+            props: {
+              message: (e.message || 'Unknown error').substring(0, 150),
+              source: (e.filename || '').split('/').pop() || 'unknown'
+            }
+          });
+        });
+
+        // Track unhandled promise rejections
+        window.addEventListener('unhandledrejection', function(e) {
+          window.plausible && window.plausible('JS Error', {
+            props: {
+              message: ('Unhandled: ' + (e.reason || 'unknown')).substring(0, 150),
+              source: 'promise'
+            }
+          });
+        });
+      })();
+    </script> </body> </html>  
