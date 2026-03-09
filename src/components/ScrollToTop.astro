@@ -1,0 +1,126 @@
+---
+// ScrollToTop component - floating button to scroll back to top of page
+// Validates Requirements: 7.1, 10.3
+---
+
+<button
+  id="scroll-to-top"
+  type="button"
+  class="scroll-to-top"
+  aria-label="Scroll to top"
+  hidden
+>
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <polyline points="18 15 12 9 6 15"></polyline>
+  </svg>
+</button>
+
+<style>
+  .scroll-to-top {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 40;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #ffffff;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.2s ease;
+    pointer-events: none;
+  }
+
+  .scroll-to-top[hidden] {
+    display: flex; /* Override hidden to let CSS handle visibility */
+  }
+
+  .scroll-to-top.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .scroll-to-top:hover {
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+    transform: translateY(-2px);
+  }
+
+  .scroll-to-top.visible:hover {
+    transform: translateY(-2px);
+  }
+
+  .scroll-to-top:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .scroll-to-top:active {
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scroll-to-top {
+      transition: none;
+    }
+
+    .scroll-to-top:hover,
+    .scroll-to-top.visible:hover {
+      transform: none;
+    }
+
+    .scroll-to-top.visible {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  function initScrollToTop(): void {
+    const button = document.getElementById('scroll-to-top');
+    if (!button) return;
+
+    const SCROLL_THRESHOLD = 400;
+
+    function updateVisibility(): void {
+      if (window.scrollY > SCROLL_THRESHOLD) {
+        button!.classList.add('visible');
+      } else {
+        button!.classList.remove('visible');
+      }
+    }
+
+    // Throttle scroll events for performance
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateVisibility();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    button.addEventListener('click', () => {
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.scrollTo({
+        top: 0,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      });
+    });
+
+    // Check initial state
+    updateVisibility();
+  }
+
+  initScrollToTop();
+  document.addEventListener('astro:after-swap', initScrollToTop);
+</script>

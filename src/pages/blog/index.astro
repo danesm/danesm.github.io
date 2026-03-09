@@ -1,0 +1,167 @@
+---
+/**
+ * Blog listing page - displays all published posts sorted by date descending
+ * Validates Requirements: 7.1, 7.4
+ */
+
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import BlogPostCard from '../../components/BlogPostCard.astro';
+import '../../styles/global.css';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+
+<BaseLayout
+  title="Blog"
+  description="Technical articles on cloud architecture, AWS, DevOps, and modern web development by Danesh Mishra."
+>
+  <div class="page-wrapper">
+    <Header currentPath="/blog" />
+
+    <main id="main-content" role="main">
+      <section class="blog-section" aria-label="Blog posts">
+        <div class="section-container">
+          <div class="blog-header">
+            <h1 class="page-title">
+              <span class="heading-accent" aria-hidden="true">//</span>
+              Blog
+            </h1>
+            <p class="page-description">
+              Thoughts on cloud architecture, DevOps, and the tools that make developers more productive.
+            </p>
+          </div>
+
+          {posts.length > 0 ? (
+            <div class="blog-grid">
+              {posts.map((post) => (
+                <BlogPostCard post={post} />
+              ))}
+            </div>
+          ) : (
+            <p class="no-posts">No posts yet. Check back soon!</p>
+          )}
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .blog-section {
+    flex: 1;
+    padding: 3rem 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .blog-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .blog-section {
+      padding: 5rem 2rem;
+    }
+  }
+
+  .section-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .section-container {
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-container {
+      padding: 0 2rem;
+    }
+  }
+
+  .blog-header {
+    margin-bottom: 3rem;
+  }
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 2rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 1rem;
+    letter-spacing: -0.03em;
+  }
+
+  @media (min-width: 768px) {
+    .page-title {
+      font-size: 2.5rem;
+    }
+  }
+
+  :global(.dark) .page-title {
+    color: #f9fafb;
+  }
+
+  .heading-accent {
+    color: #2563eb;
+    font-family: 'Fira Code', monospace;
+    font-weight: 400;
+    opacity: 0.6;
+  }
+
+  :global(.dark) .heading-accent {
+    color: #60a5fa;
+  }
+
+  .page-description {
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    color: #6b7280;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  :global(.dark) .page-description {
+    color: #9ca3af;
+  }
+
+  .blog-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .blog-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .no-posts {
+    font-size: 1.0625rem;
+    color: #6b7280;
+    text-align: center;
+    padding: 3rem 0;
+  }
+
+  :global(.dark) .no-posts {
+    color: #9ca3af;
+  }
+</style>

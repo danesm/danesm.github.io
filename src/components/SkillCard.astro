@@ -1,0 +1,140 @@
+---
+// SkillCard component - displays individual skills with proficiency indicators
+// Validates Requirements: 2.3, 2.5
+
+import type { Skill } from '../data/skills';
+
+interface Props {
+  skill: Skill;
+  category?: string;
+}
+
+const { skill, category } = Astro.props;
+
+// Map proficiency to display label and color scheme
+const proficiencyConfig = {
+  expert: { label: 'Expert', class: 'proficiency-expert' },
+  advanced: { label: 'Advanced', class: 'proficiency-advanced' },
+  intermediate: { label: 'Intermediate', class: 'proficiency-intermediate' },
+} as const;
+
+const proficiency = skill.proficiency ? proficiencyConfig[skill.proficiency] : null;
+---
+
+<div class={`skill-card ${proficiency ? proficiency.class : 'proficiency-none'}`}>
+  {skill.icon && (
+    <span class="skill-icon" aria-hidden="true">{skill.icon}</span>
+  )}
+  <span class="skill-name">{skill.name}</span>
+  {proficiency && (
+    <span class="skill-proficiency">{proficiency.label}</span>
+  )}
+</div>
+
+<style>
+  .skill-card {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.9375rem;
+    line-height: 1.4;
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  .skill-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  /* Proficiency-based color coding */
+  .proficiency-expert {
+    background-color: rgba(37, 99, 235, 0.1);
+    border-color: rgba(37, 99, 235, 0.25);
+    color: #1e40af;
+  }
+
+  :global(.dark) .proficiency-expert {
+    background-color: rgba(96, 165, 250, 0.15);
+    border-color: rgba(96, 165, 250, 0.3);
+    color: #93c5fd;
+  }
+
+  .proficiency-advanced {
+    background-color: rgba(16, 185, 129, 0.1);
+    border-color: rgba(16, 185, 129, 0.25);
+    color: #065f46;
+  }
+
+  :global(.dark) .proficiency-advanced {
+    background-color: rgba(52, 211, 153, 0.15);
+    border-color: rgba(52, 211, 153, 0.3);
+    color: #6ee7b7;
+  }
+
+  .proficiency-intermediate {
+    background-color: rgba(245, 158, 11, 0.1);
+    border-color: rgba(245, 158, 11, 0.25);
+    color: #92400e;
+  }
+
+  :global(.dark) .proficiency-intermediate {
+    background-color: rgba(251, 191, 36, 0.15);
+    border-color: rgba(251, 191, 36, 0.3);
+    color: #fcd34d;
+  }
+
+  .proficiency-none {
+    background-color: rgba(107, 114, 128, 0.1);
+    border-color: rgba(107, 114, 128, 0.25);
+    color: #374151;
+  }
+
+  :global(.dark) .proficiency-none {
+    background-color: rgba(156, 163, 175, 0.15);
+    border-color: rgba(156, 163, 175, 0.3);
+    color: #d1d5db;
+  }
+
+  /* Icon */
+  .skill-icon {
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+  }
+
+  /* Skill name */
+  .skill-name {
+    white-space: nowrap;
+  }
+
+  /* Proficiency badge */
+  .skill-proficiency {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    opacity: 0.75;
+    padding: 0.125rem 0.375rem;
+    border-radius: 9999px;
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  :global(.dark) .skill-proficiency {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* Smooth transitions */
+  @media (prefers-reduced-motion: reduce) {
+    .skill-card {
+      transition: none;
+    }
+
+    .skill-card:hover {
+      transform: none;
+    }
+  }
+</style>

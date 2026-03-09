@@ -1,0 +1,1093 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Badge from '../components/Badge.astro';
+import TimelineEntry from '../components/TimelineEntry.astro';
+import TestimonialCard from '../components/TestimonialCard.astro';
+import { professionalInfo } from '../data/professional';
+import { certifications } from '../data/certifications';
+import { careerEntries } from '../data/career';
+import { testimonials } from '../data/testimonials';
+import { getCuratedCertifications } from '../utils/certifications';
+import '../styles/global.css';
+
+const bioSentences = professionalInfo.bio.split('\n').filter(s => s.trim());
+const curatedCerts = getCuratedCertifications(certifications);
+---
+
+<BaseLayout
+  title="Home"
+  description={`Portfolio of ${professionalInfo.name}, ${professionalInfo.title} at ${professionalInfo.employer} with ${professionalInfo.yearsExperience}+ years of experience in cloud architecture, AWS services, and modern web technologies.`}
+>
+  <div class="page-wrapper">
+    <Header currentPath="/" />
+
+    <main id="main-content" role="main">
+      <!-- Hero Section -->
+      <section class="hero" aria-label="Introduction">
+        <div class="hero-bg" aria-hidden="true">
+          <div class="hero-gradient"></div>
+          <div class="hero-grid"></div>
+        </div>
+
+        <div class="hero-content">
+
+          <div class="hero-avatar">
+            <img
+              src="/images/profile.jpg"
+              alt="Danesh Mishra - Senior Cloud Architect and Solutions Builder"
+              class="avatar-img"
+              width="224"
+              height="224"
+              decoding="async"
+            />
+          </div>
+
+          <h1 class="hero-name">
+            {professionalInfo.name}
+          </h1>
+
+          <p class="hero-title">
+            <span class="title-role">{professionalInfo.title}</span>
+            <span class="title-separator" aria-hidden="true">@</span>
+            <span class="title-employer">{professionalInfo.employer}</span>
+          </p>
+
+          <p class="hero-experience">
+            I help businesses build scalable cloud solutions, automate processes with AI, and modernize legacy applications.
+          </p>
+
+          <div class="hero-actions">
+            <a href="/contact" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+              Get in Touch
+            </a>
+            <a href="/projects" class="btn btn-secondary">
+              View Projects
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="5" y1="12" x2="19" y2="12"/>
+                <polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- How I Can Help Section -->
+      <section id="about" class="services-section" aria-label="Services">
+        <div class="section-container">
+          <h2 class="section-heading">
+            <span class="heading-accent" aria-hidden="true">//</span>
+            How I Can Help
+          </h2>
+          <p class="section-description">
+            {bioSentences.map((sentence) => sentence.trim()).join(' ')}
+          </p>
+
+          <div class="services-grid">
+            <div class="service-card">
+              <span class="service-icon" aria-hidden="true">☁️</span>
+              <h3 class="service-title">Cloud-Native Apps</h3>
+              <p class="service-desc">Scalable, serverless applications built on AWS from the ground up.</p>
+            </div>
+            <div class="service-card">
+              <span class="service-icon" aria-hidden="true">🤖</span>
+              <h3 class="service-title">AI Process Automation</h3>
+              <p class="service-desc">Automate back-office workflows and business processes with AI.</p>
+            </div>
+            <div class="service-card">
+              <span class="service-icon" aria-hidden="true">🌐</span>
+              <h3 class="service-title">Websites & Portfolios</h3>
+              <p class="service-desc">Beautiful, fast business websites and portfolio sites that convert.</p>
+            </div>
+            <div class="service-card">
+              <span class="service-icon" aria-hidden="true">💳</span>
+              <h3 class="service-title">Payment Integration</h3>
+              <p class="service-desc">Stripe, payment gateways, and e-commerce solutions wired in seamlessly.</p>
+            </div>
+            <div class="service-card">
+              <span class="service-icon" aria-hidden="true">🔄</span>
+              <h3 class="service-title">App Modernization</h3>
+              <p class="service-desc">Migrate and modernize legacy apps to cloud-native architectures.</p>
+            </div>
+            <div class="service-card">
+              <span class="service-icon" aria-hidden="true">💬</span>
+              <h3 class="service-title">AI Chatbots & Agents</h3>
+              <p class="service-desc">Intelligent chatbots and AI agents that handle daily tasks for you.</p>
+            </div>
+            <div class="service-card">
+              <span class="service-icon" aria-hidden="true">🔒</span>
+              <h3 class="service-title">Secure by Design</h3>
+              <p class="service-desc">Security-first architecture with compliance and best practices baked into every solution.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Career Timeline Section -->
+      <section id="career" class="career-section" aria-label="Career Timeline">
+        <div class="section-container">
+          <h2 class="section-heading">
+            <span class="heading-accent" aria-hidden="true">//</span>
+            Career Journey
+          </h2>
+          <p class="section-description">
+            Two decades of building enterprise solutions across three continents.
+          </p>
+          <div class="timeline-container">
+            {careerEntries.map((entry, index) => (
+              <TimelineEntry 
+                entry={entry} 
+                isFirst={index === 0} 
+                isLast={index === careerEntries.length - 1} 
+              />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Testimonials Section -->
+      <section id="testimonials" class="testimonials-section" aria-label="Testimonials">
+        <div class="section-container">
+          <h2 class="section-heading">
+            <span class="heading-accent" aria-hidden="true">//</span>
+            Recommendations
+          </h2>
+          <p class="section-description">
+            Trusted by teams across financial services, data platforms, and cloud infrastructure.
+          </p>
+          <div class="testimonials-grid">
+            {testimonials.map((testimonial) => (
+              <TestimonialCard testimonial={testimonial} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <!-- Certifications Section -->
+      <section id="certifications" class="certifications-section" aria-label="Certifications">
+        <div class="section-container">
+          <h2 class="section-heading">
+            <span class="heading-accent" aria-hidden="true">//</span>
+            Certifications
+          </h2>
+          <p class="section-description">
+            Industry-recognized credentials validating cloud architecture and AWS expertise.
+          </p>
+
+          <div id="certifications-container">
+            <div class="certifications-grid" id="certs-grid">
+              {curatedCerts.map((cert) => (
+                <Badge certification={cert} />
+              ))}
+            </div>
+            {certifications.length > 10 && (
+              <div class="certs-toggle-container">
+                <button id="toggle-certs" class="btn btn-secondary certs-toggle" type="button">
+                  View all {certifications.length} certifications
+                </button>
+              </div>
+            )}
+          </div>
+          <script is:inline type="text/javascript" async src="https://cdn.credly.com/assets/utilities/embed.js"></script>
+        </div>
+      </section>
+
+      <!-- Contact CTA Section -->
+      <section id="contact" class="contact-section" aria-label="Contact">
+        <div class="section-container">
+          <div class="contact-card">
+            <h2 class="contact-heading">Got an Idea? Let's Make It Real.</h2>
+            <p class="contact-text">
+              Whether it's a cloud-native app, an AI-powered workflow, or modernising something that's been around too long — I'm here to help you ship it.
+            </p>
+            <div class="contact-links">
+              <a
+                href="/contact"
+                class="btn btn-primary"
+                aria-label="Get in touch via contact page"
+              >
+                Get in Touch
+              </a>
+              {professionalInfo.socialLinks.map((link) => (
+                <a
+                  href={link.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-secondary"
+                  aria-label={`Connect on ${link.platform}`}
+                >
+                  {link.platform.charAt(0).toUpperCase() + link.platform.slice(1)}
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>
+
+<!-- Certifications toggle data -->
+<script is:inline define:vars={{ allCertsJson: JSON.stringify(certifications) }}>
+  // Store all certifications data for the toggle
+  window.__allCertifications = JSON.parse(allCertsJson);
+</script>
+
+<style>
+  /* Page Wrapper */
+  .page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ===== HERO SECTION ===== */
+  .hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: calc(100vh - 64px);
+    padding: 3rem 1rem;
+    overflow: hidden;
+  }
+
+  @media (min-width: 640px) {
+    .hero {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(59, 130, 246, 0.08) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 80% 60%, rgba(99, 102, 241, 0.06) 0%, transparent 60%);
+  }
+
+  :global(.dark) .hero-gradient {
+    background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(59, 130, 246, 0.12) 0%, transparent 70%),
+                radial-gradient(ellipse 60% 50% at 80% 60%, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 30%, transparent 70%);
+  }
+
+  :global(.dark) .hero-grid {
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 100%;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 640px) {
+    .hero-content {
+      max-width: 800px;
+      gap: 1.5rem;
+    }
+  }
+
+  /* Badge */
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.375rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2563eb;
+    background-color: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+  }
+
+  :global(.dark) .hero-badge {
+    color: #93c5fd;
+    background-color: rgba(147, 197, 253, 0.08);
+    border-color: rgba(147, 197, 253, 0.15);
+  }
+
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #22c55e;
+    animation: pulse-dot 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse-dot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* Avatar */
+  .hero-avatar {
+    width: 224px;
+    height: 224px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 3px solid rgba(37, 99, 235, 0.2);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+  }
+
+  :global(.dark) .hero-avatar {
+    border-color: rgba(147, 197, 253, 0.25);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  .avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .hero-name {
+    font-size: clamp(2.5rem, 6vw, 4.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: #111827;
+    margin: 0;
+  }
+
+  :global(.dark) .hero-name {
+    color: #f9fafb;
+  }
+
+  /* Title */
+  .hero-title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-size: clamp(1rem, 2.5vw, 1.375rem);
+    color: #4b5563;
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  :global(.dark) .hero-title {
+    color: #9ca3af;
+  }
+
+  .title-role {
+    font-weight: 600;
+    color: #1e3a8a;
+  }
+
+  :global(.dark) .title-role {
+    color: #93c5fd;
+  }
+
+  .title-separator {
+    color: #6b7280;
+    font-weight: 300;
+  }
+
+  .title-employer {
+    font-weight: 600;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Experience / Value Proposition */
+  .hero-experience {
+    font-size: 1.0625rem;
+    color: #6b7280;
+    margin: 0;
+    line-height: 1.7;
+    max-width: 540px;
+  }
+
+  @media (min-width: 640px) {
+    .hero-experience {
+      font-size: 1.125rem;
+    }
+  }
+
+  :global(.dark) .hero-experience {
+    color: #9ca3af;
+  }
+
+  /* CTA Buttons */
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    border-radius: 10px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    min-height: 44px;
+    min-width: 44px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .btn-primary {
+    color: #ffffff;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+    box-shadow: 0 1px 3px rgba(37, 99, 235, 0.3), 0 1px 2px rgba(37, 99, 235, 0.2);
+  }
+
+  .btn-primary:hover {
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35), 0 2px 4px rgba(37, 99, 235, 0.2);
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    color: #374151;
+    background-color: transparent;
+    border: 1.5px solid rgba(0, 0, 0, 0.15);
+  }
+
+  .btn-secondary:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background-color: rgba(37, 99, 235, 0.04);
+  }
+
+  :global(.dark) .btn-secondary {
+    color: #d1d5db;
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  :global(.dark) .btn-secondary:hover {
+    border-color: #93c5fd;
+    color: #93c5fd;
+    background-color: rgba(147, 197, 253, 0.06);
+  }
+
+  /* ===== SHARED SECTION STYLES ===== */
+  .section-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .section-container {
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-container {
+      padding: 0 2rem;
+    }
+  }
+
+  .section-heading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 2rem;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 768px) {
+    .section-heading {
+      font-size: 1.875rem;
+      margin: 0 0 3rem;
+    }
+  }
+
+  :global(.dark) .section-heading {
+    color: #f9fafb;
+  }
+
+  .heading-accent {
+    color: #2563eb;
+    font-family: 'Fira Code', monospace;
+    font-weight: 400;
+    opacity: 0.6;
+  }
+
+  :global(.dark) .heading-accent {
+    color: #60a5fa;
+  }
+
+  .section-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #6b7280;
+    margin: -1.5rem 0 2rem;
+    max-width: 60ch;
+  }
+
+  @media (min-width: 768px) {
+    .section-description {
+      font-size: 1.0625rem;
+      margin: -2rem 0 2.5rem;
+    }
+  }
+
+  :global(.dark) .section-description {
+    color: #9ca3af;
+  }
+
+  /* ===== SERVICES SECTION ===== */
+  .services-section {
+    padding: 3rem 1rem;
+    background-color: rgba(249, 250, 251, 0.5);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 640px) {
+    .services-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .services-section {
+      padding: 5rem 2rem;
+    }
+  }
+
+  :global(.dark) .services-section {
+    background-color: rgba(17, 24, 39, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 480px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .services-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  .service-card {
+    padding: 1.5rem;
+    border-radius: 12px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    transition: border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .service-card:hover {
+    border-color: rgba(37, 99, 235, 0.2);
+    transform: translateY(-2px);
+  }
+
+  :global(.dark) .service-card {
+    background-color: rgba(31, 41, 55, 0.5);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  :global(.dark) .service-card:hover {
+    border-color: rgba(147, 197, 253, 0.2);
+  }
+
+  .service-icon {
+    font-size: 1.75rem;
+    display: block;
+    margin-bottom: 0.75rem;
+  }
+
+  .service-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #111827;
+    margin: 0 0 0.5rem;
+  }
+
+  :global(.dark) .service-title {
+    color: #f3f4f6;
+  }
+
+  .service-desc {
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: #6b7280;
+    margin: 0;
+  }
+
+  :global(.dark) .service-desc {
+    color: #9ca3af;
+  }
+
+  /* ===== CAREER TIMELINE SECTION ===== */
+  .career-section {
+    padding: 3rem 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 640px) {
+    .career-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .career-section {
+      padding: 5rem 2rem;
+    }
+  }
+
+  :global(.dark) .career-section {
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .timeline-container {
+    max-width: 700px;
+  }
+
+  /* ===== TESTIMONIALS SECTION ===== */
+  .testimonials-section {
+    padding: 3rem 1rem;
+    background-color: rgba(249, 250, 251, 0.5);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 640px) {
+    .testimonials-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .testimonials-section {
+      padding: 5rem 2rem;
+    }
+  }
+
+  :global(.dark) .testimonials-section {
+    background-color: rgba(17, 24, 39, 0.5);
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .testimonials-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .testimonials-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* ===== CERTIFICATIONS SECTION ===== */
+  .certifications-section {
+    padding: 3rem 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 640px) {
+    .certifications-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .certifications-section {
+      padding: 5rem 2rem;
+    }
+  }
+
+  :global(.dark) .certifications-section {
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .certifications-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 480px) {
+    .certifications-grid {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    }
+  }
+
+  @media (min-width: 640px) {
+    .certifications-grid {
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .certifications-grid {
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    }
+  }
+
+  .certs-toggle-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  .certs-toggle {
+    font-size: 0.9375rem;
+  }
+
+  /* ===== CONTACT SECTION ===== */
+  .contact-section {
+    padding: 3rem 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  @media (min-width: 640px) {
+    .contact-section {
+      padding: 4rem 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .contact-section {
+      padding: 5rem 2rem;
+    }
+  }
+
+  :global(.dark) .contact-section {
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
+  .contact-card {
+    position: relative;
+    text-align: center;
+    padding: 2.5rem 1.5rem;
+    border-radius: 16px;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 80%, rgba(99, 102, 241, 0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 60% at 80% 20%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(37, 99, 235, 0.06), rgba(99, 102, 241, 0.04));
+    border: 1px solid rgba(37, 99, 235, 0.12);
+    overflow: hidden;
+  }
+
+  .contact-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 25% 25%, rgba(37, 99, 235, 0.08) 1px, transparent 1px),
+      radial-gradient(circle at 75% 75%, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  @media (min-width: 640px) {
+    .contact-card {
+      padding: 3.5rem 2rem;
+    }
+  }
+
+  :global(.dark) .contact-card {
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 80%, rgba(99, 102, 241, 0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 60% at 80% 20%, rgba(37, 99, 235, 0.12) 0%, transparent 50%),
+      linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(99, 102, 241, 0.06));
+    border-color: rgba(147, 197, 253, 0.12);
+  }
+
+  .contact-heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 768px) {
+    .contact-heading {
+      font-size: 1.75rem;
+    }
+  }
+
+  :global(.dark) .contact-heading {
+    color: #f9fafb;
+  }
+
+  .contact-text {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #6b7280;
+    margin: 0 0 2rem;
+    max-width: 50ch;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @media (min-width: 768px) {
+    .contact-text {
+      font-size: 1.0625rem;
+    }
+  }
+
+  :global(.dark) .contact-text {
+    color: #9ca3af;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+  }
+
+  /* ===== REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .badge-dot {
+      animation: none;
+    }
+
+    .btn,
+    .social-pill,
+    .highlight-card {
+      transition: none;
+    }
+
+    .btn-primary:hover {
+      transform: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Smooth scroll for anchor links
+   */
+  function initSmoothScroll(): void {
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        const href = (anchor as HTMLAnchorElement).getAttribute('href');
+        if (!href || href === '#') return;
+
+        const target = document.querySelector(href);
+        if (!target) return;
+
+        e.preventDefault();
+
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        target.scrollIntoView({
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+          block: 'start',
+        });
+
+        history.pushState(null, '', href);
+      });
+    });
+  }
+
+  /**
+   * Intersection Observer for fade-in animations
+   */
+  function initScrollAnimations(): void {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const sections = document.querySelectorAll('.services-section, .career-section, .testimonials-section, .certifications-section, .contact-section');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    sections.forEach((section) => {
+      section.classList.add('animate-on-scroll');
+      observer.observe(section);
+    });
+  }
+
+  /**
+   * Analytics event tracking for key interactive elements
+   */
+  function initEventTracking(): void {
+    document.querySelectorAll<HTMLAnchorElement>('.contact-links .btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const platform = btn.textContent?.trim() || 'unknown';
+      });
+    });
+
+    document.querySelectorAll<HTMLAnchorElement>('.hero-actions .btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const label = btn.textContent?.trim() || 'unknown';
+      });
+    });
+  }
+
+  /**
+   * Certifications toggle - switch between curated (top 10) and all certifications
+   * Validates Requirements: 6.1, 6.2
+   */
+  function initCertsToggle(): void {
+    const toggleBtn = document.getElementById('toggle-certs');
+    const certsGrid = document.getElementById('certs-grid');
+    if (!toggleBtn || !certsGrid) return;
+
+    const allCerts = (window as any).__allCertifications;
+    if (!allCerts || !Array.isArray(allCerts)) return;
+
+    let showingAll = false;
+
+    toggleBtn.addEventListener('click', () => {
+      showingAll = !showingAll;
+
+      if (showingAll) {
+        // Clear grid and render all certifications
+        certsGrid.innerHTML = '';
+        allCerts.forEach((cert: any) => {
+          const card = document.createElement('div');
+          card.className = 'badge-card';
+          if (cert.credlyBadgeId) {
+            const embedDiv = document.createElement('div');
+            embedDiv.setAttribute('data-iframe-width', '200');
+            embedDiv.setAttribute('data-iframe-height', '320');
+            embedDiv.setAttribute('data-share-badge-id', cert.credlyBadgeId);
+            embedDiv.setAttribute('data-share-badge-host', 'https://www.credly.com');
+            card.appendChild(embedDiv);
+          } else {
+            const placeholder = document.createElement('div');
+            placeholder.className = 'badge-placeholder';
+            placeholder.setAttribute('role', 'img');
+            placeholder.setAttribute('aria-label', `${cert.name} badge`);
+            placeholder.innerHTML = `
+              ${cert.badgeImageUrl
+                ? `<img src="${cert.badgeImageUrl}" alt="${cert.name} badge" class="badge-placeholder-img" width="150" height="150" decoding="async" />`
+                : `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="badge-placeholder-icon" aria-hidden="true">
+                <path d="M12 15l-2 5l1.5-1l1.5 1l1.5-1l1.5 1l-2-5" />
+                <circle cx="12" cy="9" r="6" />
+              </svg>`}
+              <p class="badge-placeholder-name">${cert.name}</p>
+              <p class="badge-placeholder-issuer">${cert.issuer}</p>
+              <p class="badge-placeholder-date">Issued ${new Date(cert.issueDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</p>
+            `;
+            card.appendChild(placeholder);
+          }
+          certsGrid.appendChild(card);
+        });
+        toggleBtn.textContent = 'Show top 10 certifications';
+
+        // Re-trigger Credly embed script
+        const script = document.createElement('script');
+        script.src = 'https://cdn.credly.com/assets/utilities/embed.js';
+        script.async = true;
+        document.body.appendChild(script);
+      } else {
+        // Reload page to reset to curated view (simplest approach for static site)
+        window.location.hash = 'certifications';
+        window.location.reload();
+      }
+    });
+  }
+
+  initSmoothScroll();
+  initScrollAnimations();
+  initEventTracking();
+  initCertsToggle();
+
+  // Re-initialize after Astro page transitions
+  document.addEventListener('astro:after-swap', () => {
+    initSmoothScroll();
+    initScrollAnimations();
+    initEventTracking();
+    initCertsToggle();
+  });
+</script>
+
+<style>
+  /* Scroll animation styles */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>

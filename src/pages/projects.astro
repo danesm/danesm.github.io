@@ -1,0 +1,512 @@
+---
+// Projects page - displays all projects with filtering capability
+// Validates Requirements: 11.1, 11.2, 11.3, 11.4, 11.5
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { projects } from '../data/projects';
+import '../styles/global.css';
+
+// Extract unique categories and technologies for filters
+const categories = [...new Set(projects.map((p) => p.category))];
+const allTechnologies = [...new Set(projects.flatMap((p) => p.technologies))].sort();
+
+// Sort: featured first, then by startDate descending
+const sortedProjects = [...projects].sort((a, b) => {
+  if (a.featured !== b.featured) return a.featured ? -1 : 1;
+  return b.startDate.localeCompare(a.startDate);
+});
+
+const categoryLabels: Record<string, string> = {
+  cloud: 'Cloud',
+  web: 'Web',
+  mobile: 'Mobile',
+  data: 'Data',
+  other: 'Other',
+};
+---
+
+<BaseLayout
+  title="Projects"
+  description="Explore projects by Danesh Mishra — cloud architecture, AWS services, full-stack web development, and open-source contributions."
+>
+  <div class="page-wrapper">
+    <Header currentPath="/projects" />
+
+    <main id="main-content" role="main">
+      <section class="projects-hero" aria-label="Projects introduction">
+        <div class="section-container">
+          <h1 class="page-title">
+            <span class="heading-accent" aria-hidden="true">//</span>
+            Projects
+          </h1>
+          <p class="page-description">
+            A collection of projects spanning cloud architecture, full-stack development, and open-source tooling.
+          </p>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section class="filters-section" aria-label="Project filters">
+        <div class="section-container">
+          <div class="filters-bar">
+            <!-- Category filter -->
+            <div class="filter-group" role="group" aria-label="Filter by category">
+              <span class="filter-label">Category</span>
+              <div class="filter-options">
+                <button class="filter-btn active" data-filter="category" data-value="all" aria-pressed="true">
+                  All
+                </button>
+                {categories.map((cat) => (
+                  <button class="filter-btn" data-filter="category" data-value={cat} aria-pressed="false">
+                    {categoryLabels[cat] || cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <!-- Technology filter -->
+            <div class="filter-group" role="group" aria-label="Filter by technology">
+              <span class="filter-label">Technology</span>
+              <div class="filter-options">
+                <button class="filter-btn active" data-filter="tech" data-value="all" aria-pressed="true">
+                  All
+                </button>
+                {allTechnologies.map((tech) => (
+                  <button class="filter-btn" data-filter="tech" data-value={tech} aria-pressed="false">
+                    {tech}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects Grid -->
+      <section class="projects-section" aria-label="Projects list">
+        <div class="section-container">
+          <p class="results-count" aria-live="polite">
+            Showing <span id="visible-count">{sortedProjects.length}</span> of {sortedProjects.length} projects
+          </p>
+
+          <div class="projects-grid" id="projects-grid">
+            {sortedProjects.map((project) => (
+              <div
+                class="project-item"
+                data-category={project.category}
+                data-technologies={JSON.stringify(project.technologies)}
+              >
+                <ProjectCard project={project} />
+              </div>
+            ))}
+          </div>
+
+          <p class="no-results" id="no-results" hidden>
+            No projects match the selected filters. Try adjusting your criteria.
+          </p>
+        </div>
+      </section>
+    </main>
+
+    <Footer />
+  </div>
+</BaseLayout>
+
+<style>
+  .page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .section-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .section-container {
+      padding: 0 1.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .section-container {
+      padding: 0 2rem;
+    }
+  }
+
+  /* ===== HERO ===== */
+  .projects-hero {
+    padding: 3rem 0 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .projects-hero {
+      padding: 4rem 0 2rem;
+    }
+  }
+
+  .page-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 1rem;
+    letter-spacing: -0.02em;
+  }
+
+  @media (min-width: 768px) {
+    .page-title {
+      font-size: 2.25rem;
+    }
+  }
+
+  :global(.dark) .page-title {
+    color: #f9fafb;
+  }
+
+  .heading-accent {
+    color: #2563eb;
+    font-family: 'Fira Code', monospace;
+    font-weight: 400;
+    opacity: 0.6;
+  }
+
+  :global(.dark) .heading-accent {
+    color: #60a5fa;
+  }
+
+  .page-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #6b7280;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  @media (min-width: 768px) {
+    .page-description {
+      font-size: 1.0625rem;
+    }
+  }
+
+  :global(.dark) .page-description {
+    color: #9ca3af;
+  }
+
+  /* ===== FILTERS ===== */
+  .filters-section {
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  }
+
+  :global(.dark) .filters-section {
+    border-bottom-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .filters-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .filter-group {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.75rem;
+    }
+  }
+
+  .filter-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    white-space: nowrap;
+  }
+
+  :global(.dark) .filter-label {
+    color: #9ca3af;
+  }
+
+  .filter-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .filter-btn {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.5rem 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    background-color: transparent;
+    border: 1px solid rgba(107, 114, 128, 0.2);
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    min-height: 44px;
+    white-space: nowrap;
+  }
+
+  .filter-btn:hover {
+    border-color: #2563eb;
+    color: #2563eb;
+    background-color: rgba(37, 99, 235, 0.04);
+  }
+
+  .filter-btn:focus-visible {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  .filter-btn.active {
+    color: #ffffff;
+    background-color: #2563eb;
+    border-color: #2563eb;
+  }
+
+  :global(.dark) .filter-btn {
+    color: #d1d5db;
+    border-color: rgba(75, 85, 99, 0.4);
+  }
+
+  :global(.dark) .filter-btn:hover {
+    border-color: #60a5fa;
+    color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.08);
+  }
+
+  :global(.dark) .filter-btn.active {
+    color: #ffffff;
+    background-color: #2563eb;
+    border-color: #2563eb;
+  }
+
+  /* ===== PROJECTS GRID ===== */
+  .projects-section {
+    padding: 1.5rem 0 3rem;
+    flex: 1;
+  }
+
+  @media (min-width: 640px) {
+    .projects-section {
+      padding: 2rem 0 4rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .projects-section {
+      padding: 2rem 0 5rem;
+    }
+  }
+
+  .results-count {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0 0 1.5rem;
+  }
+
+  :global(.dark) .results-count {
+    color: #9ca3af;
+  }
+
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .project-item {
+    display: flex;
+  }
+
+  .project-item[hidden] {
+    display: none;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    font-size: 1rem;
+    line-height: 1.625;
+    color: #6b7280;
+  }
+
+  :global(.dark) .no-results {
+    color: #9ca3af;
+  }
+
+  /* ===== REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    .filter-btn {
+      transition: none;
+    }
+  }
+
+  /* Scroll animation styles */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+
+  .animate-on-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-on-scroll {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Client-side filtering for projects by category and technology.
+   * Validates Requirements: 11.4
+   */
+  function initProjectFilters(): void {
+    const grid = document.getElementById('projects-grid');
+    const countEl = document.getElementById('visible-count');
+    const noResults = document.getElementById('no-results');
+    if (!grid || !countEl || !noResults) return;
+
+    const items = Array.from(grid.querySelectorAll<HTMLElement>('.project-item'));
+    let activeCategory = 'all';
+    let activeTech = 'all';
+
+    function applyFilters(): void {
+      let visible = 0;
+
+      items.forEach((item) => {
+        const cat = item.dataset.category || '';
+        const techs: string[] = JSON.parse(item.dataset.technologies || '[]');
+
+        const matchCategory = activeCategory === 'all' || cat === activeCategory;
+        const matchTech = activeTech === 'all' || techs.includes(activeTech);
+
+        if (matchCategory && matchTech) {
+          item.hidden = false;
+          visible++;
+        } else {
+          item.hidden = true;
+        }
+      });
+
+      countEl!.textContent = String(visible);
+      noResults!.hidden = visible > 0;
+    }
+
+    function setActive(group: string, value: string): void {
+      const buttons = document.querySelectorAll<HTMLButtonElement>(
+        `.filter-btn[data-filter="${group}"]`
+      );
+      buttons.forEach((btn) => {
+        const isActive = btn.dataset.value === value;
+        btn.classList.toggle('active', isActive);
+        btn.setAttribute('aria-pressed', String(isActive));
+      });
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('.filter-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const group = btn.dataset.filter!;
+        const value = btn.dataset.value!;
+
+        if (group === 'category') {
+          activeCategory = value;
+        } else {
+          activeTech = value;
+        }
+
+        setActive(group, value);
+        applyFilters();
+      });
+    });
+  }
+
+  /**
+   * Intersection Observer for scroll-triggered animations on projects page
+   * Validates Requirements: 7.3, 7.5
+   */
+  function initScrollAnimations(): void {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) return;
+
+    const sections = document.querySelectorAll('.projects-hero, .filters-section, .projects-section');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    sections.forEach((section) => {
+      section.classList.add('animate-on-scroll');
+      observer.observe(section);
+    });
+  }
+
+  initProjectFilters();
+  initScrollAnimations();
+  initProjectTracking();
+  document.addEventListener('astro:after-swap', () => {
+    initProjectFilters();
+    initScrollAnimations();
+    initProjectTracking();
+  });
+
+  /**
+   * Track project link clicks (live demo + source)
+   * Validates Requirements: 9.2
+   */
+  function initProjectTracking(): void {
+    document.querySelectorAll<HTMLAnchorElement>('.project-link').forEach((link) => {
+      link.addEventListener('click', () => {
+        const card = link.closest('.project-card');
+        const projectName = card?.querySelector('.project-title')?.textContent?.trim() || 'unknown';
+        const linkType = link.textContent?.trim().toLowerCase().includes('demo') ? 'live_demo' : 'source';
+      });
+    });
+  }
+</script>

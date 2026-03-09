@@ -1,0 +1,349 @@
+---
+/**
+ * TimelineEntry component - displays a career timeline entry with vertical connecting line
+ * Validates Requirements: 5.2
+ */
+
+import type { CareerEntry } from '../data/career';
+
+interface Props {
+  entry: CareerEntry;
+  isFirst?: boolean;
+  isLast?: boolean;
+}
+
+const { entry, isFirst = false, isLast = false } = Astro.props;
+
+const dateDisplay = entry.endDate
+  ? `${entry.startDate} — ${entry.endDate}`
+  : `${entry.startDate} — Present`;
+
+const isPresent = !entry.endDate;
+
+// Calculate tenure
+function calcTenure(start: string, end?: string): string {
+  const parseDate = (s: string) => {
+    const [mon, year] = s.split(' ');
+    const months: Record<string, number> = {
+      Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+      Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11,
+    };
+    return new Date(parseInt(year), months[mon] || 0, 1);
+  };
+  const startD = parseDate(start);
+  const endD = end ? parseDate(end) : new Date();
+  let months = (endD.getFullYear() - startD.getFullYear()) * 12 + (endD.getMonth() - startD.getMonth());
+  if (months < 1) months = 1;
+  const yrs = Math.floor(months / 12);
+  const mos = months % 12;
+  if (yrs === 0) return `${mos} mo${mos !== 1 ? 's' : ''}`;
+  if (mos === 0) return `${yrs} yr${yrs !== 1 ? 's' : ''}`;
+  return `${yrs} yr${yrs !== 1 ? 's' : ''} ${mos} mo${mos !== 1 ? 's' : ''}`;
+}
+
+const tenure = calcTenure(entry.startDate, entry.endDate);
+---
+
+<article class={`timeline-entry ${isFirst ? 'timeline-first' : ''} ${isLast ? 'timeline-last' : ''}`}>
+  {/* Timeline track */}
+  <div class="timeline-track" aria-hidden="true">
+    <div class={`timeline-dot ${isPresent ? 'timeline-dot-active' : ''}`}>
+      {isPresent && <span class="dot-pulse"></span>}
+    </div>
+    {!isLast && <div class="timeline-line"></div>}
+  </div>
+
+  {/* Content */}
+  <div class="timeline-content">
+    <div class="timeline-header">
+      <span class={`timeline-date ${isPresent ? 'date-present' : ''}`}>
+        {dateDisplay}
+        <span class="timeline-tenure" {...(isPresent ? { 'data-start': entry.startDate } : {})}>· {tenure}</span>
+      </span>
+      <span class="timeline-location">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+          <circle cx="12" cy="10" r="3"/>
+        </svg>
+        {entry.location}
+      </span>
+    </div>
+
+    <h3 class="timeline-role">{entry.role}</h3>
+    <p class="timeline-company">{entry.company}</p>
+    <p class="timeline-description">{entry.description}</p>
+  </div>
+</article>
+
+<style>
+  .timeline-entry {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    gap: 1.25rem;
+    position: relative;
+    padding-bottom: 2.5rem;
+  }
+
+  .timeline-entry.timeline-last {
+    padding-bottom: 0;
+  }
+
+  @media (min-width: 768px) {
+    .timeline-entry {
+      grid-template-columns: 32px 1fr;
+      gap: 1.75rem;
+      padding-bottom: 3rem;
+    }
+
+    .timeline-entry.timeline-last {
+      padding-bottom: 0;
+    }
+  }
+
+  /* Timeline track */
+  .timeline-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    padding-top: 0.25rem;
+  }
+
+  .timeline-dot {
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background-color: rgba(37, 99, 235, 0.15);
+    border: 2.5px solid #2563eb;
+    flex-shrink: 0;
+    z-index: 1;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .timeline-entry:hover .timeline-dot {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+  }
+
+  :global(.dark) .timeline-dot {
+    background-color: rgba(96, 165, 250, 0.15);
+    border-color: #60a5fa;
+  }
+
+  :global(.dark) .timeline-entry:hover .timeline-dot {
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.1);
+  }
+
+  .timeline-dot-active {
+    background-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+  }
+
+  :global(.dark) .timeline-dot-active {
+    background-color: #60a5fa;
+    box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.12);
+  }
+
+  .dot-pulse {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 2px solid #2563eb;
+    animation: pulse-ring 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  :global(.dark) .dot-pulse {
+    border-color: #60a5fa;
+  }
+
+  @keyframes pulse-ring {
+    0% {
+      opacity: 0.6;
+      transform: scale(1);
+    }
+    70% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
+    100% {
+      opacity: 0;
+      transform: scale(1.8);
+    }
+  }
+
+  .timeline-line {
+    width: 2px;
+    flex: 1;
+    margin-top: 0.5rem;
+    background: linear-gradient(
+      to bottom,
+      rgba(37, 99, 235, 0.25),
+      rgba(37, 99, 235, 0.08)
+    );
+    border-radius: 1px;
+  }
+
+  :global(.dark) .timeline-line {
+    background: linear-gradient(
+      to bottom,
+      rgba(96, 165, 250, 0.25),
+      rgba(96, 165, 250, 0.08)
+    );
+  }
+
+  /* Content */
+  .timeline-content {
+    padding-top: 0;
+    transition: transform 0.3s ease;
+  }
+
+  .timeline-entry:hover .timeline-content {
+    transform: translateX(4px);
+  }
+
+  .timeline-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .timeline-date {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #4b5563;
+    background-color: rgba(107, 114, 128, 0.08);
+    border-radius: 8px;
+    letter-spacing: 0.01em;
+  }
+
+  :global(.dark) .timeline-date {
+    color: #d1d5db;
+    background-color: rgba(156, 163, 175, 0.12);
+  }
+
+  .date-present {
+    color: #2563eb;
+    background-color: rgba(37, 99, 235, 0.08);
+    border: 1px solid rgba(37, 99, 235, 0.15);
+  }
+
+  :global(.dark) .date-present {
+    color: #93c5fd;
+    background-color: rgba(96, 165, 250, 0.1);
+    border-color: rgba(96, 165, 250, 0.2);
+  }
+
+  .timeline-tenure {
+    font-weight: 400;
+    opacity: 0.7;
+    margin-left: 0.25rem;
+  }
+
+  .timeline-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8125rem;
+    color: #6b7280;
+  }
+
+  :global(.dark) .timeline-location {
+    color: #9ca3af;
+  }
+
+  .timeline-role {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 0.25rem;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 768px) {
+    .timeline-role {
+      font-size: 1.25rem;
+    }
+  }
+
+  :global(.dark) .timeline-role {
+    color: #f3f4f6;
+  }
+
+  .timeline-company {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #2563eb;
+    margin: 0 0 0.625rem;
+    line-height: 1.4;
+  }
+
+  :global(.dark) .timeline-company {
+    color: #60a5fa;
+  }
+
+  .timeline-description {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #6b7280;
+    margin: 0;
+    max-width: 60ch;
+  }
+
+  :global(.dark) .timeline-description {
+    color: #9ca3af;
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .timeline-dot,
+    .timeline-content {
+      transition: none;
+    }
+
+    .timeline-entry:hover .timeline-dot {
+      transform: none;
+    }
+
+    .timeline-entry:hover .timeline-content {
+      transform: none;
+    }
+
+    .dot-pulse {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  function updateLiveTenure() {
+    document.querySelectorAll<HTMLSpanElement>('.timeline-tenure[data-start]').forEach((el) => {
+      const startStr = el.dataset.start;
+      if (!startStr) return;
+      const months: Record<string, number> = {
+        Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+        Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11,
+      };
+      const [mon, year] = startStr.split(' ');
+      const startD = new Date(parseInt(year), months[mon] || 0, 1);
+      const now = new Date();
+      let diff = (now.getFullYear() - startD.getFullYear()) * 12 + (now.getMonth() - startD.getMonth());
+      if (diff < 1) diff = 1;
+      const yrs = Math.floor(diff / 12);
+      const mos = diff % 12;
+      let text = '';
+      if (yrs === 0) text = `${mos} mo${mos !== 1 ? 's' : ''}`;
+      else if (mos === 0) text = `${yrs} yr${yrs !== 1 ? 's' : ''}`;
+      else text = `${yrs} yr${yrs !== 1 ? 's' : ''} ${mos} mo${mos !== 1 ? 's' : ''}`;
+      el.textContent = `· ${text}`;
+    });
+  }
+  updateLiveTenure();
+  document.addEventListener('astro:after-swap', updateLiveTenure);
+</script>
