@@ -1,50 +1,33 @@
 ---
 import ScrollToTop from '../components/ScrollToTop.astro';
+import { generateMetaTags } from '../utils/seo/meta';
+import { generatePersonSchema, generateBreadcrumbSchema } from '../utils/seo/structured-data';
+import { SEO_CONFIG } from '../utils/seo/config';
 
 interface Props {
   title: string;
   description: string;
   ogImage?: string;
   canonicalURL?: string;
+  ogType?: 'website' | 'article';
 }
 
-const { title, description, ogImage, canonicalURL } = Astro.props;
+const { title, description, ogImage, canonicalURL, ogType } = Astro.props;
 
-const siteUrl = 'https://danesm.github.io';
-const defaultOgImage = `${siteUrl}/images/og-image.svg`;
-const fullTitle = title === 'Home' ? 'Danesh Mishra - Senior Cloud Architect' : `${title} | Danesh Mishra`;
-const canonical = canonicalURL || `${siteUrl}${Astro.url.pathname}`;
-const ogImageUrl = ogImage || defaultOgImage;
+const meta = generateMetaTags({
+  title,
+  description,
+  siteUrl: SEO_CONFIG.siteUrl,
+  pathname: Astro.url.pathname,
+  ogImage,
+  ogType,
+});
 
-// Professional information for structured data
-const professionalInfo = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  "name": "Danesh Mishra",
-  "jobTitle": "Senior Cloud Architect",
-  "worksFor": {
-    "@type": "Organization",
-    "name": "Amazon Web Services (AWS)"
-  },
-  "url": siteUrl,
-  "image": `${siteUrl}/images/og-image.svg`,
-  "description": "Senior Cloud Architect at AWS with 19+ years of experience in cloud architecture, serverless solutions, and modern web development.",
-  "sameAs": [
-    "https://www.linkedin.com/in/daneshmishra",
-    "https://github.com/danesm",
-    "https://www.credly.com/users/danesh-mishra/badges"
-  ],
-  "knowsAbout": [
-    "AWS",
-    "Cloud Architecture",
-    "AppSync",
-    "DynamoDB",
-    "Lambda",
-    "Terraform",
-    "GraphQL",
-    "React"
-  ]
-};
+// Override canonical if explicitly provided
+const canonical = canonicalURL || meta.canonicalURL;
+
+const personSchema = generatePersonSchema();
+const breadcrumbSchema = generateBreadcrumbSchema(SEO_CONFIG.siteUrl, Astro.url.pathname, title);
 ---
 
 <!DOCTYPE html>
@@ -58,34 +41,37 @@ const professionalInfo = {
     <meta name="generator" content={Astro.generator} />
     
     <!-- Primary Meta Tags -->
-    <title>{fullTitle}</title>
-    <meta name="title" content={fullTitle} />
-    <meta name="description" content={description} />
+    <title>{meta.title}</title>
+    <meta name="title" content={meta.title} />
+    <meta name="description" content={meta.description} />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
+    {SEO_CONFIG.googleSiteVerification && <meta name="google-site-verification" content={SEO_CONFIG.googleSiteVerification} />}
     
     <!-- Preconnect to external origins for faster resource loading -->
     
     <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={meta.ogType} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:title" content={fullTitle} />
-    <meta property="og:description" content={description} />
-    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:title" content={meta.ogTitle} />
+    <meta property="og:description" content={meta.ogDescription} />
+    <meta property="og:image" content={meta.ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta property="og:site_name" content="Danesh Mishra" />
     <meta property="og:locale" content="en_US" />
     
     <!-- Twitter Card -->
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:card" content={meta.twitterCard} />
     <meta name="twitter:url" content={canonical} />
-    <meta name="twitter:title" content={fullTitle} />
-    <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content={ogImageUrl} />
-    <meta name="twitter:image:alt" content={`${fullTitle} - Portfolio`} />
+    <meta name="twitter:title" content={meta.twitterTitle} />
+    <meta name="twitter:description" content={meta.twitterDescription} />
+    <meta name="twitter:image" content={meta.twitterImage} />
+    <meta name="twitter:image:alt" content={`${meta.title} - Portfolio`} />
     
     <!-- JSON-LD Structured Data -->
-    <script type="application/ld+json" set:html={JSON.stringify(professionalInfo)} />
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(breadcrumbSchema)} />
     
     <!-- Theme Initialization Script (runs before page render to prevent flash) -->
     <script is:inline>

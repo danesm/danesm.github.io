@@ -155,3 +155,61 @@ export const socialLinkArb = (): fc.Arbitrary<SocialLink> =>
     url: fc.webUrl({ withFragments: false, withQueryParameters: false }),
     username: nonEmptyString(),
   });
+
+// ---------------------------------------------------------------------------
+// SEO generators
+// ---------------------------------------------------------------------------
+
+import type { MetaTagInput } from '../utils/seo/meta';
+
+/** Generates valid URL pathnames like `/blog/my-post/` */
+export const pathnameArb = (): fc.Arbitrary<string> =>
+  fc
+    .array(
+      fc.stringMatching(/^[a-z0-9][a-z0-9-]{0,19}$/),
+      { minLength: 0, maxLength: 4 },
+    )
+    .map((segments) => {
+      if (segments.length === 0) return '/';
+      return `/${segments.join('/')}/`;
+    });
+
+/** Generates MetaTagInput objects for property-based testing. */
+export const metaTagInputArb = (): fc.Arbitrary<MetaTagInput> =>
+  fc.record({
+    title: nonEmptyString(),
+    description: nonEmptyString(),
+    siteUrl: fc.constant('https://danesm.github.io'),
+    pathname: pathnameArb(),
+    ogImage: fc.option(
+      fc.webUrl({ withFragments: false, withQueryParameters: false }),
+      { nil: undefined },
+    ),
+    ogType: fc.option(
+      fc.constantFrom<'website' | 'article'>('website', 'article'),
+      { nil: undefined },
+    ),
+  });
+
+// ---------------------------------------------------------------------------
+// Structured Data generators
+// ---------------------------------------------------------------------------
+
+import type { ArticleSchemaInput } from '../utils/seo/structured-data';
+
+/** Generates ArticleSchemaInput objects for property-based testing. */
+export const articleSchemaInputArb = (): fc.Arbitrary<ArticleSchemaInput> =>
+  fc.record({
+    title: nonEmptyString(),
+    description: nonEmptyString(),
+    datePublished: dateString(),
+    url: fc.constant('https://danesm.github.io').chain((base) =>
+      pathnameArb().map((path) => `${base}${path}`),
+    ),
+    tags: fc.option(
+      fc.array(nonEmptyString(), { minLength: 1, maxLength: 5 }),
+      { nil: undefined },
+    ),
+    authorName: nonEmptyString(),
+    authorUrl: fc.webUrl({ withFragments: false, withQueryParameters: false }),
+  });
