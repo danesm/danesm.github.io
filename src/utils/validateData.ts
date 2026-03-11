@@ -11,7 +11,6 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Certification } from '../data/certifications';
-import type { Project } from '../data/projects';
 import type { ProfessionalInfo } from '../data/professional';
 import type { SkillsData } from '../data/skills';
 
@@ -161,31 +160,6 @@ export function validateSkillsData(
   });
 }
 
-export function validateProjects(
-  items: Project[],
-  publicDir: string,
-  errors: ValidationError[],
-): void {
-  const file = 'src/data/projects.ts';
-  if (!Array.isArray(items) || items.length === 0) {
-    errors.push({ file, field: 'projects', message: 'Projects array is empty' });
-    return;
-  }
-
-  items.forEach((proj, i) => {
-    const prefix = `projects[${i}]`;
-    requireString(proj.id, file, `${prefix}.id`, errors);
-    requireString(proj.title, file, `${prefix}.title`, errors);
-    requireString(proj.description, file, `${prefix}.description`, errors);
-    requireArray(proj.technologies, file, `${prefix}.technologies`, errors);
-    requireString(proj.category, file, `${prefix}.category`, errors);
-    requireString(proj.startDate, file, `${prefix}.startDate`, errors);
-
-    if (proj.imageUrl) {
-      validateImagePath(proj.imageUrl, file, `${prefix}.imageUrl`, publicDir, errors);
-    }
-  });
-}
 
 // ---------------------------------------------------------------------------
 // Aggregate runner
@@ -195,7 +169,6 @@ export interface ValidateAllOptions {
   professionalInfo: ProfessionalInfo;
   certifications: Certification[];
   skillsData: SkillsData;
-  projects: Project[];
   publicDir: string;
 }
 
@@ -208,7 +181,6 @@ export function validateAll(opts: ValidateAllOptions): ValidationError[] {
   validateProfessionalInfo(opts.professionalInfo, errors);
   validateCertifications(opts.certifications, opts.publicDir, errors);
   validateSkillsData(opts.skillsData, errors);
-  validateProjects(opts.projects, opts.publicDir, errors);
   return errors;
 }
 

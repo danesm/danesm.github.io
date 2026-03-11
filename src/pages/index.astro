@@ -5,6 +5,8 @@ import Footer from '../components/Footer.astro';
 import Badge from '../components/Badge.astro';
 import TimelineEntry from '../components/TimelineEntry.astro';
 import TestimonialCard from '../components/TestimonialCard.astro';
+import ServiceIcon from '../components/ServiceIcon.astro';
+import PoweredByStrip from '../components/PoweredByStrip.astro';
 import { professionalInfo } from '../data/professional';
 import { certifications } from '../data/certifications';
 import { careerEntries } from '../data/career';
@@ -14,6 +16,32 @@ import '../styles/global.css';
 
 const bioSentences = professionalInfo.bio.split('\n').filter(s => s.trim());
 const curatedCerts = getCuratedCertifications(certifications);
+
+interface ServiceCardData {
+  type: 'cloud' | 'ai-automation' | 'websites' | 'payments' | 'modernization' | 'chatbots' | 'security';
+  title: string;
+  description: string;
+  isAI: boolean;
+}
+
+const serviceCards: ServiceCardData[] = [
+  { type: 'cloud', title: 'Cloud-Native Apps', description: 'Scalable, serverless applications built on AWS from the ground up.', isAI: false },
+  { type: 'ai-automation', title: 'AI Process Automation', description: 'Automate back-office workflows and business processes with AI.', isAI: true },
+  { type: 'websites', title: 'Websites & Portfolios', description: 'Beautiful, fast business websites and portfolio sites that convert.', isAI: false },
+  { type: 'payments', title: 'Payment Integration', description: 'Stripe, payment gateways, and e-commerce solutions wired in seamlessly.', isAI: false },
+  { type: 'modernization', title: 'App Modernization', description: 'Migrate and modernize legacy apps to cloud-native architectures.', isAI: false },
+  { type: 'chatbots', title: 'AI Chatbots & Agents', description: 'Intelligent chatbots and AI agents that handle daily tasks for you.', isAI: true },
+  { type: 'security', title: 'Secure by Design', description: 'Security-first architecture with compliance and best practices baked into every solution.', isAI: false },
+];
+
+// Generate particle data for hero background
+const particles = Array.from({ length: 20 }, (_, i) => ({
+  duration: 6 + (i * 0.47) % 9,
+  delay: (i * 0.73) % 5,
+  x: (i * 17 + 5) % 95,
+  size: 2 + (i * 0.21) % 4,
+  drift: -20 + (i * 2.1) % 40,
+}));
 ---
 
 <BaseLayout
@@ -28,23 +56,40 @@ const curatedCerts = getCuratedCertifications(certifications);
       <section class="hero" aria-label="Introduction">
         <div class="hero-bg" aria-hidden="true">
           <div class="hero-gradient"></div>
-          <div class="hero-grid"></div>
+          <div class="hero-grid" data-parallax></div>
+          <div class="particle-field" aria-hidden="true">
+            {particles.map((p) => (
+              <span
+                class="particle"
+                style={`--duration: ${p.duration}s; --delay: ${p.delay}s; --x: ${p.x}%; --size: ${p.size}px; --drift: ${p.drift}px;`}
+              />
+            ))}
+          </div>
         </div>
 
         <div class="hero-content">
 
-          <div class="hero-avatar">
-            <img
-              src="/images/profile.jpg"
-              alt="Danesh Mishra - Senior Cloud Architect and Solutions Builder"
-              class="avatar-img"
-              width="224"
-              height="224"
-              decoding="async"
-            />
+          <div class="glow-ring">
+            <div class="hero-avatar">
+              <img
+                src="/images/profile.jpg"
+                alt="Danesh Mishra - Senior Cloud Architect and Solutions Builder"
+                class="avatar-img"
+                width="224"
+                height="224"
+                decoding="async"
+              />
+            </div>
           </div>
 
-          <h1 class="hero-name">
+          <div class="hero-badge ai-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8z"/>
+            </svg>
+            AI-Augmented Development
+          </div>
+
+          <h1 class="hero-name gradient-shimmer">
             {professionalInfo.name}
           </h1>
 
@@ -53,6 +98,18 @@ const curatedCerts = getCuratedCertifications(certifications);
             <span class="title-separator" aria-hidden="true">@</span>
             <span class="title-employer">{professionalInfo.employer}</span>
           </p>
+
+          <div class="typewriter-container" aria-live="polite">
+            <span id="typewriter-target" class="typewriter-text"></span>
+            <span class="typewriter-cursor" aria-hidden="true">|</span>
+          </div>
+
+          <div class="hero-stats">
+            <span class="hero-stat">
+              <span class="hero-stat-number" data-counter data-target="19">19+</span>
+              <span class="hero-stat-label">Years Experience</span>
+            </span>
+          </div>
 
           <p class="hero-experience">
             I help businesses build scalable cloud solutions, automate processes with AI, and modernize legacy applications.
@@ -77,6 +134,11 @@ const curatedCerts = getCuratedCertifications(certifications);
         </div>
       </section>
 
+      <!-- Powered By Technology Strip -->
+      <section class="powered-by-section" aria-label="Technologies used">
+        <PoweredByStrip />
+      </section>
+
       <!-- How I Can Help Section -->
       <section id="about" class="services-section" aria-label="Services">
         <div class="section-container">
@@ -89,41 +151,18 @@ const curatedCerts = getCuratedCertifications(certifications);
           </p>
 
           <div class="services-grid">
-            <div class="service-card">
-              <span class="service-icon" aria-hidden="true">☁️</span>
-              <h3 class="service-title">Cloud-Native Apps</h3>
-              <p class="service-desc">Scalable, serverless applications built on AWS from the ground up.</p>
-            </div>
-            <div class="service-card">
-              <span class="service-icon" aria-hidden="true">🤖</span>
-              <h3 class="service-title">AI Process Automation</h3>
-              <p class="service-desc">Automate back-office workflows and business processes with AI.</p>
-            </div>
-            <div class="service-card">
-              <span class="service-icon" aria-hidden="true">🌐</span>
-              <h3 class="service-title">Websites & Portfolios</h3>
-              <p class="service-desc">Beautiful, fast business websites and portfolio sites that convert.</p>
-            </div>
-            <div class="service-card">
-              <span class="service-icon" aria-hidden="true">💳</span>
-              <h3 class="service-title">Payment Integration</h3>
-              <p class="service-desc">Stripe, payment gateways, and e-commerce solutions wired in seamlessly.</p>
-            </div>
-            <div class="service-card">
-              <span class="service-icon" aria-hidden="true">🔄</span>
-              <h3 class="service-title">App Modernization</h3>
-              <p class="service-desc">Migrate and modernize legacy apps to cloud-native architectures.</p>
-            </div>
-            <div class="service-card">
-              <span class="service-icon" aria-hidden="true">💬</span>
-              <h3 class="service-title">AI Chatbots & Agents</h3>
-              <p class="service-desc">Intelligent chatbots and AI agents that handle daily tasks for you.</p>
-            </div>
-            <div class="service-card">
-              <span class="service-icon" aria-hidden="true">🔒</span>
-              <h3 class="service-title">Secure by Design</h3>
-              <p class="service-desc">Security-first architecture with compliance and best practices baked into every solution.</p>
-            </div>
+            {serviceCards.map((card, i) => (
+              <div
+                class="service-card service-card-animated"
+                data-service-card
+                {...(card.isAI ? { 'data-ai-card': '' } : {})}
+                style={`animation-delay: ${i * 100}ms;`}
+              >
+                <ServiceIcon service={card.type} />
+                <h3 class="service-title">{card.title}</h3>
+                <p class="service-desc">{card.description}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -299,6 +338,46 @@ const curatedCerts = getCuratedCertifications(certifications);
       linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
   }
 
+  /* Particle background */
+  .particle-field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .particle {
+    position: absolute;
+    bottom: -10px;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    background-color: rgba(59, 130, 246, 0.3);
+    left: var(--x);
+    animation: particle-float var(--duration) var(--delay) ease-in-out infinite;
+  }
+
+  :global(.dark) .particle {
+    background-color: rgba(147, 197, 253, 0.2);
+  }
+
+  @keyframes particle-float {
+    0% {
+      transform: translate3d(0, 0, 0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1;
+    }
+    90% {
+      opacity: 1;
+    }
+    100% {
+      transform: translate3d(var(--drift), -100vh, 0);
+      opacity: 0;
+    }
+  }
+
   .hero-content {
     position: relative;
     z-index: 1;
@@ -350,20 +429,40 @@ const curatedCerts = getCuratedCertifications(certifications);
     50% { opacity: 0.4; }
   }
 
-  /* Avatar */
-  .hero-avatar {
-    width: 224px;
-    height: 224px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid rgba(37, 99, 235, 0.2);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-    flex-shrink: 0;
+  /* Glow ring around avatar */
+  @property --angle {
+    syntax: '<angle>';
+    initial-value: 0deg;
+    inherits: false;
   }
 
-  :global(.dark) .hero-avatar {
-    border-color: rgba(147, 197, 253, 0.25);
+  .glow-ring {
+    position: relative;
+    display: inline-flex;
+    border-radius: 50%;
+    padding: 4px;
+    background: conic-gradient(from var(--angle), #2563eb, #7c3aed, #2563eb);
+    animation: glow-rotate 3s linear infinite;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  :global(.dark) .glow-ring {
+    background: conic-gradient(from var(--angle), #60a5fa, #a78bfa, #60a5fa);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  }
+
+  @keyframes glow-rotate {
+    to { --angle: 360deg; }
+  }
+
+  /* Avatar */
+  .hero-avatar {
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: none;
+    flex-shrink: 0;
   }
 
   .avatar-img {
@@ -384,6 +483,43 @@ const curatedCerts = getCuratedCertifications(certifications);
 
   :global(.dark) .hero-name {
     color: #f9fafb;
+  }
+
+  /* Gradient shimmer on hero name */
+  .gradient-shimmer {
+    background: linear-gradient(
+      90deg,
+      #1e3a8a 0%,
+      #2563eb 25%,
+      #7c3aed 50%,
+      #2563eb 75%,
+      #1e3a8a 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: shimmer 4s ease-in-out infinite;
+  }
+
+  :global(.dark) .gradient-shimmer {
+    background: linear-gradient(
+      90deg,
+      #93c5fd 0%,
+      #a5b4fc 25%,
+      #c4b5fd 50%,
+      #a5b4fc 75%,
+      #93c5fd 100%
+    );
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
   }
 
   /* Title */
@@ -444,6 +580,82 @@ const curatedCerts = getCuratedCertifications(certifications);
     color: #9ca3af;
   }
 
+  /* Typewriter effect */
+  .typewriter-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 1.75rem;
+    font-size: 1.125rem;
+    color: #6b7280;
+  }
+
+  :global(.dark) .typewriter-container {
+    color: #9ca3af;
+  }
+
+  .typewriter-text {
+    font-weight: 500;
+    color: #2563eb;
+  }
+
+  :global(.dark) .typewriter-text {
+    color: #93c5fd;
+  }
+
+  .typewriter-cursor {
+    font-weight: 300;
+    margin-left: 1px;
+    animation: blink-cursor 0.8s step-end infinite;
+    color: #2563eb;
+  }
+
+  :global(.dark) .typewriter-cursor {
+    color: #93c5fd;
+  }
+
+  @keyframes blink-cursor {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Hero Stats */
+  .hero-stats {
+    display: flex;
+    gap: 2rem;
+    justify-content: center;
+  }
+
+  .hero-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .hero-stat-number {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #2563eb;
+    line-height: 1;
+  }
+
+  :global(.dark) .hero-stat-number {
+    color: #93c5fd;
+  }
+
+  .hero-stat-label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+  }
+
+  :global(.dark) .hero-stat-label {
+    color: #9ca3af;
+  }
+
   /* CTA Buttons */
   .hero-actions {
     display: flex;
@@ -462,7 +674,7 @@ const curatedCerts = getCuratedCertifications(certifications);
     font-weight: 600;
     border-radius: 10px;
     text-decoration: none;
-    transition: all 0.2s ease;
+    transition: all 0.2s ease-out;
     min-height: 44px;
     min-width: 44px;
     border: none;
@@ -481,8 +693,8 @@ const curatedCerts = getCuratedCertifications(certifications);
   }
 
   .btn-primary:hover {
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35), 0 2px 4px rgba(37, 99, 235, 0.2);
-    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4), 0 2px 6px rgba(37, 99, 235, 0.25);
+    transform: translateY(-1px) scale(1.03);
   }
 
   .btn-secondary {
@@ -495,6 +707,7 @@ const curatedCerts = getCuratedCertifications(certifications);
     border-color: #2563eb;
     color: #2563eb;
     background-color: rgba(37, 99, 235, 0.04);
+    transform: scale(1.02);
   }
 
   :global(.dark) .btn-secondary {
@@ -506,6 +719,7 @@ const curatedCerts = getCuratedCertifications(certifications);
     border-color: #93c5fd;
     color: #93c5fd;
     background-color: rgba(147, 197, 253, 0.06);
+    transform: scale(1.02);
   }
 
   /* ===== SHARED SECTION STYLES ===== */
@@ -579,6 +793,16 @@ const curatedCerts = getCuratedCertifications(certifications);
     color: #9ca3af;
   }
 
+  /* ===== POWERED BY STRIP ===== */
+  .powered-by-section {
+    padding: 1rem 1rem 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  :global(.dark) .powered-by-section {
+    border-top-color: rgba(255, 255, 255, 0.05);
+  }
+
   /* ===== SERVICES SECTION ===== */
   .services-section {
     padding: 3rem 1rem;
@@ -622,32 +846,53 @@ const curatedCerts = getCuratedCertifications(certifications);
     }
   }
 
+  /* Staggered fade-in for service cards */
+  .service-card-animated {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .service-card-animated.visible {
+    animation: card-fade-in 0.5s ease forwards;
+  }
+
+  @keyframes card-fade-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
   .service-card {
     padding: 1.5rem;
     border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.8);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    background: rgba(255, 255, 255, 0.8);
+    border: 1.5px solid rgba(0, 0, 0, 0.06);
+    transition: border-color 0.25s ease, transform 0.25s ease, background-image 0.25s ease, box-shadow 0.25s ease;
   }
 
   .service-card:hover {
-    border-color: rgba(37, 99, 235, 0.2);
+    border-color: transparent;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.8)),
+                       linear-gradient(135deg, #2563eb, #4f46e5, #7c3aed);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
     transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
   }
 
   :global(.dark) .service-card {
-    background-color: rgba(31, 41, 55, 0.5);
+    background: rgba(31, 41, 55, 0.5);
     border-color: rgba(255, 255, 255, 0.06);
   }
 
   :global(.dark) .service-card:hover {
-    border-color: rgba(147, 197, 253, 0.2);
-  }
-
-  .service-icon {
-    font-size: 1.75rem;
-    display: block;
-    margin-bottom: 0.75rem;
+    border-color: transparent;
+    background-image: linear-gradient(rgba(31, 41, 55, 0.5), rgba(31, 41, 55, 0.5)),
+                       linear-gradient(135deg, #60a5fa, #818cf8, #a78bfa);
+    background-origin: border-box;
+    background-clip: padding-box, border-box;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
   }
 
   .service-title {
@@ -902,10 +1147,79 @@ const curatedCerts = getCuratedCertifications(certifications);
     justify-content: center;
   }
 
+  /* Sparkle animation on AI service cards */
+  [data-ai-card] {
+    position: relative;
+    overflow: hidden;
+  }
+
+  [data-ai-card]::before,
+  [data-ai-card]::after {
+    content: '✦';
+    position: absolute;
+    font-size: 0.75rem;
+    pointer-events: none;
+    opacity: 0;
+    color: #2563eb;
+  }
+
+  [data-ai-card]::before {
+    top: 12px;
+    right: 12px;
+    animation: sparkle-glint 2s 0.5s ease-in-out infinite;
+  }
+
+  [data-ai-card]::after {
+    bottom: 16px;
+    right: 24px;
+    animation: sparkle-glint 1.8s 1.2s ease-in-out infinite;
+  }
+
+  :global(.dark) [data-ai-card]::before,
+  :global(.dark) [data-ai-card]::after {
+    color: #93c5fd;
+  }
+
+  @keyframes sparkle-glint {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(0.5) rotate(0deg);
+    }
+    50% {
+      opacity: 0.8;
+      transform: scale(1) rotate(180deg);
+    }
+  }
+
   /* ===== REDUCED MOTION ===== */
   @media (prefers-reduced-motion: reduce) {
     .badge-dot {
       animation: none;
+    }
+
+    .glow-ring {
+      animation: none;
+    }
+
+    .particle-field {
+      display: none;
+    }
+
+    .gradient-shimmer {
+      animation: none;
+    }
+
+    .service-card-animated {
+      opacity: 1;
+      transform: none;
+    }
+
+    .service-card {
+      transition: none;
+    }
+
+    .service-card:hover {
+      transform: none;
     }
 
     .btn,
@@ -914,8 +1228,18 @@ const curatedCerts = getCuratedCertifications(certifications);
       transition: none;
     }
 
-    .btn-primary:hover {
+    .btn-primary:hover,
+    .btn-secondary:hover {
       transform: none;
+    }
+
+    [data-ai-card]::before,
+    [data-ai-card]::after {
+      display: none;
+    }
+
+    .typewriter-cursor {
+      animation: none;
     }
   }
 </style>
@@ -1056,17 +1380,187 @@ const curatedCerts = getCuratedCertifications(certifications);
     });
   }
 
+  /**
+   * Typewriter effect cycling through professional roles
+   */
+  function initTypewriter(reducedMotion: boolean): void {
+    const target = document.getElementById('typewriter-target');
+    const cursor = document.querySelector('.typewriter-cursor');
+    if (!target) return;
+
+    const phrases = ['Cloud Architect', 'AI Builder', 'Solutions Engineer'];
+
+    if (reducedMotion) {
+      target.textContent = phrases.join(', ');
+      if (cursor) (cursor as HTMLElement).style.display = 'none';
+      return;
+    }
+
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+
+    function tick(): void {
+      const currentPhrase = phrases[phraseIndex];
+
+      if (isDeleting) {
+        charIndex--;
+        target!.textContent = currentPhrase.substring(0, charIndex);
+
+        if (charIndex === 0) {
+          isDeleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+          setTimeout(tick, 500);
+          return;
+        }
+        setTimeout(tick, 40);
+      } else {
+        charIndex++;
+        target!.textContent = currentPhrase.substring(0, charIndex);
+
+        if (charIndex === currentPhrase.length) {
+          isDeleting = true;
+          setTimeout(tick, 1500);
+          return;
+        }
+        setTimeout(tick, 80);
+      }
+    }
+
+    tick();
+  }
+
+  /**
+   * Staggered fade-in IntersectionObserver for service cards
+   */
+  function initStaggeredFadeIn(reducedMotion: boolean): void {
+    const cards = document.querySelectorAll('.service-card-animated');
+    if (!cards.length) return;
+
+    if (reducedMotion) {
+      cards.forEach(card => card.classList.add('visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
+    );
+
+    cards.forEach(card => observer.observe(card));
+  }
+
+  /**
+   * Counter animation for [data-counter] elements
+   */
+  function animateCounter(el: HTMLElement, target: number, duration: number): void {
+    const start = performance.now();
+
+    function update(now: number): void {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease-out cubic for deceleration
+      const eased = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(eased * target);
+      el.textContent = current + '+';
+
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      }
+    }
+
+    requestAnimationFrame(update);
+  }
+
+  function initCounterAnimation(reducedMotion: boolean): void {
+    const counters = document.querySelectorAll('[data-counter]');
+    if (!counters.length) return;
+
+    if (reducedMotion) {
+      counters.forEach(el => {
+        const target = parseInt(el.getAttribute('data-target') || '0', 10);
+        el.textContent = target + '+';
+      });
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const target = parseInt(el.getAttribute('data-target') || '0', 10);
+            animateCounter(el, target, 2000);
+            observer.unobserve(el);
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    counters.forEach(el => {
+      el.textContent = '0+';
+      observer.observe(el);
+    });
+  }
+
+  /**
+   * Parallax-lite scroll effect on hero grid
+   */
+  function initParallaxLite(reducedMotion: boolean): void {
+    if (reducedMotion) return;
+
+    const grid = document.querySelector('.hero-grid[data-parallax]') as HTMLElement;
+    if (!grid) return;
+
+    let ticking = false;
+
+    function onScroll(): void {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          const scrollY = window.scrollY;
+          const offset = Math.round(scrollY * 0.3);
+          grid.style.transform = `translate3d(0, ${offset}px, 0)`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }
+
+  /**
+   * Unified initialization with error boundaries
+   */
+  function initAllAnimations(): void {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    try { initTypewriter(reducedMotion); } catch (e) { console.warn('Typewriter init failed:', e); }
+    try { initStaggeredFadeIn(reducedMotion); } catch (e) { console.warn('FadeIn init failed:', e); }
+    try { initCounterAnimation(reducedMotion); } catch (e) { console.warn('Counter init failed:', e); }
+    try { initParallaxLite(reducedMotion); } catch (e) { console.warn('Parallax init failed:', e); }
+  }
+
   initSmoothScroll();
   initScrollAnimations();
   initEventTracking();
   initCertsToggle();
+  initAllAnimations();
 
-  // Re-initialize after Astro page transitions
   document.addEventListener('astro:after-swap', () => {
     initSmoothScroll();
     initScrollAnimations();
     initEventTracking();
     initCertsToggle();
+    initAllAnimations();
   });
 </script>
 

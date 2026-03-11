@@ -14,7 +14,7 @@ import {
   certificationArb,
 } from './generators';
 import { skillsData } from '../data/skills';
-import { projects } from '../data/projects';
+
 import { certifications } from '../data/certifications';
 
 // ---------------------------------------------------------------------------
@@ -41,14 +41,6 @@ describe('Skill generator', () => {
 });
 
 describe('Project generator', () => {
-  it('always produces a valid id (lowercase alphanumeric + hyphens)', () => {
-    assertProperty(
-      fc.property(projectArb(), (project) => {
-        expect(project.id).toMatch(/^[a-z0-9-]+$/);
-      }),
-    );
-  });
-
   it('always has at least one technology', () => {
     assertProperty(
       fc.property(projectArb(), (project) => {
@@ -95,14 +87,6 @@ describe('Site data invariants', () => {
   it('every skill category has at least one skill', () => {
     for (const category of skillsData.categories) {
       expect(category.skills.length).toBeGreaterThanOrEqual(1);
-    }
-  });
-
-  it('every project has a non-empty id, title, and description', () => {
-    for (const project of projects) {
-      expect(project.id.trim().length).toBeGreaterThan(0);
-      expect(project.title.trim().length).toBeGreaterThan(0);
-      expect(project.description.trim().length).toBeGreaterThan(0);
     }
   });
 

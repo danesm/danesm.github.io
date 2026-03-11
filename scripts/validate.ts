@@ -13,7 +13,6 @@ import { resolve } from 'node:path';
 import { professionalInfo } from '../src/data/professional';
 import { certifications } from '../src/data/certifications';
 import { skillsData } from '../src/data/skills';
-import { projects } from '../src/data/projects';
 import { validateAll, formatErrors } from '../src/utils/validateData';
 
 const publicDir = resolve(import.meta.dirname ?? '.', '..', 'public');
@@ -22,7 +21,6 @@ const errors = validateAll({
   professionalInfo,
   certifications,
   skillsData,
-  projects,
   publicDir,
 });
 

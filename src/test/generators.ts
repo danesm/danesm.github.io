@@ -6,7 +6,7 @@
  */
 import fc from 'fast-check';
 import type { Skill, SkillCategory, SkillsData } from '../data/skills';
-import type { Project } from '../data/projects';
+
 import type { Certification } from '../data/certifications';
 import type { Testimonial } from '../data/testimonials';
 import type { CareerEntry } from '../data/career';
@@ -75,16 +75,27 @@ export const skillsDataArb = (): fc.Arbitrary<SkillsData> =>
 // Project generators
 // ---------------------------------------------------------------------------
 
+export type ProjectFrontmatter = {
+  title: string;
+  description: string;
+  technologies: string[];
+  category: 'cloud' | 'web' | 'mobile' | 'data' | 'other';
+  featured: boolean;
+  startDate: string;
+  endDate?: string;
+  liveUrl?: string;
+  repoUrl?: string;
+  imageUrl?: string;
+};
+
 const projectCategoryArb = fc.constantFrom<
   'cloud' | 'web' | 'mobile' | 'data' | 'other'
 >('cloud', 'web', 'mobile', 'data', 'other');
 
-export const projectArb = (): fc.Arbitrary<Project> =>
+export const projectArb = (): fc.Arbitrary<ProjectFrontmatter> =>
   fc.record({
-    id: fc.string({ minLength: 1, maxLength: 30 }).filter((s) => /^[a-z0-9-]+$/.test(s)),
     title: nonEmptyString(),
     description: nonEmptyString(),
-    longDescription: fc.option(nonEmptyString(), { nil: undefined }),
     technologies: fc.array(nonEmptyString(), { minLength: 1, maxLength: 8 }),
     category: projectCategoryArb,
     featured: fc.boolean(),
@@ -213,3 +224,34 @@ export const articleSchemaInputArb = (): fc.Arbitrary<ArticleSchemaInput> =>
     authorName: nonEmptyString(),
     authorUrl: fc.webUrl({ withFragments: false, withQueryParameters: false }),
   });
+
+// ---------------------------------------------------------------------------
+// Homepage modernization generators
+// ---------------------------------------------------------------------------
+
+/** Service type union for SVG icon testing. */
+export type ServiceTypeGen = 'cloud' | 'ai-automation' | 'websites' | 'payments' | 'modernization' | 'chatbots' | 'security';
+
+/** Generates a non-empty array of phrase strings for typewriter testing. */
+export const phraseListArb = (): fc.Arbitrary<string[]> =>
+  fc.array(nonEmptyString(), { minLength: 1, maxLength: 10 });
+
+/** Generates a progress value in [0, 1] for easing function testing. */
+export const progressArb = (): fc.Arbitrary<number> =>
+  fc.double({ min: 0, max: 1, noNaN: true });
+
+/** Generates a scroll position (non-negative integer) for parallax testing. */
+export const scrollPositionArb = (): fc.Arbitrary<number> =>
+  fc.integer({ min: 0, max: 10000 });
+
+/** Generates a parallax factor in [0.2, 0.5] for parallax testing. */
+export const parallaxFactorArb = (): fc.Arbitrary<number> =>
+  fc.double({ min: 0.2, max: 0.5, noNaN: true });
+
+/** Generates a service type for SVG icon testing. */
+export const serviceTypeArb = (): fc.Arbitrary<ServiceTypeGen> =>
+  fc.constantFrom<ServiceTypeGen>('cloud', 'ai-automation', 'websites', 'payments', 'modernization', 'chatbots', 'security');
+
+/** Generates a counter target value (positive integer) for counter animation testing. */
+export const counterTargetArb = (): fc.Arbitrary<number> =>
+  fc.integer({ min: 1, max: 999 });
