@@ -1,0 +1,59 @@
+---
+// ServiceIcon component - renders inline SVG icons for service cards
+// Validates Requirements: 7.1, 7.2, 7.3, 7.4, 7.5
+
+export type ServiceType = 'cloud' | 'ai-automation' | 'websites' | 'payments' | 'modernization' | 'chatbots' | 'security';
+
+interface Props {
+  service: ServiceType;
+  size?: number;
+}
+
+const { service, size = 28 } = Astro.props;
+
+// Each service maps to a distinct SVG path set
+const iconPaths: Record<ServiceType, string> = {
+  // Cloud icon - cloud shape
+  cloud: '<path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+
+  // AI/Automation icon - cpu/brain chip
+  'ai-automation': '<rect x="4" y="4" width="16" height="16" rx="2" ry="2" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 9h6v6H9z" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M20 9h3M20 14h3M1 9h3M1 14h3" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+
+  // Websites icon - globe/monitor
+  'websites': '<circle cx="12" cy="12" r="10" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M2 12h20" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+
+  // Payments icon - credit card
+  'payments': '<rect x="1" y="4" width="22" height="16" rx="2" ry="2" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><line x1="1" y1="10" x2="23" y2="10" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+
+  // Modernization icon - refresh/cycle arrows
+  'modernization': '<polyline points="23 4 23 10 17 10" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><polyline points="1 20 1 14 7 14" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+
+  // Chatbots icon - message bubbles
+  'chatbots': '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 10h.01M12 10h.01M16 10h.01" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+
+  // Security icon - shield with check
+  'security': '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+};
+
+const svgContent = iconPaths[service] || iconPaths.cloud;
+---
+
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width={size}
+  height={size}
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  aria-hidden="true"
+  class="service-icon-svg"
+  set:html={svgContent}
+/>
+
+<style>
+  .service-icon-svg {
+    display: block;
+    margin-bottom: 0.75rem;
+    flex-shrink: 0;
+  }
+</style>

@@ -24,7 +24,30 @@ const navLinks = [
     <div class="nav-content">
       <!-- Logo/Name -->
       <a href="/" class="logo" aria-label="Home">
-        <span class="logo-mark" aria-hidden="true">D</span>
+        <span class="logo-mark" aria-hidden="true">
+          <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Antenna -->
+            <line x1="16" y1="5" x2="16" y2="2"/>
+            <circle cx="16" cy="1.5" r="1.2" fill="currentColor" stroke="none"/>
+            <!-- Head -->
+            <rect x="9" y="5" width="14" height="10" rx="2"/>
+            <!-- Eyes -->
+            <circle cx="13" cy="10" r="1.5" fill="currentColor" stroke="none"/>
+            <circle cx="19" cy="10" r="1.5" fill="currentColor" stroke="none"/>
+            <!-- Body -->
+            <rect x="10" y="16" width="12" height="8" rx="1.5"/>
+            <!-- Arms -->
+            <line x1="10" y1="18" x2="6" y2="20"/>
+            <line x1="22" y1="18" x2="26" y2="20"/>
+            <!-- Legs -->
+            <line x1="13" y1="24" x2="13" y2="28"/>
+            <line x1="19" y1="24" x2="19" y2="28"/>
+            <!-- Feet -->
+            <line x1="11" y1="28" x2="15" y2="28"/>
+            <line x1="17" y1="28" x2="21" y2="28"/>
+          </svg>
+        </span>
+        <span class="robo-bubble" id="robo-bubble"></span>
       </a>
 
       <!-- Desktop Navigation -->
@@ -168,10 +191,10 @@ const navLinks = [
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6, #ec4899);
     color: #ffffff;
     font-size: 1.25rem;
     font-weight: 800;
@@ -182,6 +205,60 @@ const navLinks = [
   .logo:hover .logo-mark {
     transform: scale(1.05);
     box-shadow: 0 2px 12px rgba(37, 99, 235, 0.3);
+  }
+
+  /* Robot speech bubble */
+  .robo-bubble {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    padding: 5px 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: #fff;
+    pointer-events: none;
+    opacity: 0;
+    transition: none;
+  }
+
+  .robo-bubble.show {
+    animation: bubble-pop 1.8s ease forwards;
+  }
+
+  @keyframes bubble-pop {
+    0% { opacity: 0; transform: translateX(-50%) scale(0); }
+    10% { opacity: 1; transform: translateX(-50%) scale(1.15); }
+    20% { transform: translateX(-50%) scale(1); }
+    75% { opacity: 1; transform: translateX(-50%) scale(1); }
+    100% { opacity: 0; transform: translateX(-50%) scale(0.8); }
+  }
+
+  .logo.robo-bounce .logo-mark {
+    animation: robo-wiggle 0.5s ease;
+  }
+
+  @keyframes robo-wiggle {
+    0% { transform: rotate(0deg); }
+    20% { transform: rotate(-12deg); }
+    40% { transform: rotate(10deg); }
+    60% { transform: rotate(-6deg); }
+    80% { transform: rotate(4deg); }
+    100% { transform: rotate(0deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .robo-bubble.show {
+      animation: none;
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+    .logo.robo-bounce .logo-mark {
+      animation: none;
+    }
   }
 
   /* Desktop Navigation */
@@ -506,7 +583,54 @@ const navLinks = [
 
   // Initialize on page load
   initMobileMenu();
+  initRoboGreeting();
 
   // Re-initialize after page navigation (for view transitions)
-  document.addEventListener('astro:after-swap', initMobileMenu);
+  document.addEventListener('astro:after-swap', () => {
+    initMobileMenu();
+    initRoboGreeting();
+  });
+
+  /**
+   * Robot logo click greeting
+   */
+  function initRoboGreeting(): void {
+    const logo = document.querySelector<HTMLAnchorElement>('.logo');
+    const bubble = document.getElementById('robo-bubble');
+    if (!logo || !bubble) return;
+
+    const greetings = ['Hello! 👋', 'Hola! 🤖', 'Welcome! ✨', 'Hey there! 🚀', 'Namaste! 🙏', 'Bonjour! 🎉'];
+    let idx = 0;
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    logo.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      // Clear any running animation
+      if (timer) clearTimeout(timer);
+      bubble.classList.remove('show');
+      logo.classList.remove('robo-bounce');
+
+      // Force reflow to restart animation
+      void bubble.offsetWidth;
+
+      bubble.textContent = greetings[idx];
+      idx = (idx + 1) % greetings.length;
+
+      bubble.classList.add('show');
+      logo.classList.add('robo-bounce');
+
+      const isHome = window.location.pathname === '/' || window.location.pathname === '/index.html';
+
+      timer = setTimeout(() => {
+        bubble.classList.remove('show');
+        logo.classList.remove('robo-bounce');
+        timer = null;
+        // Navigate home after animation if not already there
+        if (!isHome) {
+          window.location.href = '/';
+        }
+      }, 500);
+    });
+  }
 </script>

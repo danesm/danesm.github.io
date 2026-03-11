@@ -5,7 +5,6 @@ import {
   validateProfessionalInfo,
   validateCertifications,
   validateSkillsData,
-  validateProjects,
   validateImagePath,
   validateAll,
   formatErrors,
@@ -14,7 +13,6 @@ import {
 import type { ProfessionalInfo } from '../data/professional';
 import type { Certification } from '../data/certifications';
 import type { SkillsData } from '../data/skills';
-import type { Project } from '../data/projects';
 
 // Use the real public dir for image path tests
 const currentDir = dirname(fileURLToPath(import.meta.url));
@@ -52,17 +50,6 @@ function validSkillsData(): SkillsData {
   };
 }
 
-function validProject(): Project {
-  return {
-    id: 'test-project',
-    title: 'Test Project',
-    description: 'A test project.',
-    technologies: ['TypeScript'],
-    category: 'web',
-    featured: false,
-    startDate: '2024',
-  };
-}
 
 
 // ---------------------------------------------------------------------------
@@ -170,38 +157,6 @@ describe('validateSkillsData', () => {
 });
 
 // ---------------------------------------------------------------------------
-// Projects
-// ---------------------------------------------------------------------------
-
-describe('validateProjects', () => {
-  test('valid projects produce no errors', () => {
-    const errors: ValidationError[] = [];
-    validateProjects([validProject()], publicDir, errors);
-    expect(errors).toHaveLength(0);
-  });
-
-  test('empty array produces an error', () => {
-    const errors: ValidationError[] = [];
-    validateProjects([], publicDir, errors);
-    expect(errors.length).toBeGreaterThan(0);
-  });
-
-  test('missing title produces an error', () => {
-    const errors: ValidationError[] = [];
-    const proj = { ...validProject(), title: '' };
-    validateProjects([proj], publicDir, errors);
-    expect(errors.some((e) => e.field.includes('title'))).toBe(true);
-  });
-
-  test('empty technologies produces an error', () => {
-    const errors: ValidationError[] = [];
-    const proj = { ...validProject(), technologies: [] as string[] };
-    validateProjects([proj], publicDir, errors);
-    expect(errors.some((e) => e.field.includes('technologies'))).toBe(true);
-  });
-});
-
-// ---------------------------------------------------------------------------
 // Image path validation
 // ---------------------------------------------------------------------------
 
@@ -242,7 +197,6 @@ describe('validateAll', () => {
       professionalInfo: validProfessionalInfo(),
       certifications: [validCertification()],
       skillsData: validSkillsData(),
-      projects: [validProject()],
       publicDir,
     });
     expect(errors).toHaveLength(0);
@@ -253,7 +207,6 @@ describe('validateAll', () => {
       professionalInfo: { ...validProfessionalInfo(), name: '', employer: '' },
       certifications: [],
       skillsData: { categories: [] },
-      projects: [],
       publicDir,
     });
     expect(errors.length).toBeGreaterThanOrEqual(4);
