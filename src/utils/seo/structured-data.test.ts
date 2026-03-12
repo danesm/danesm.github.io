@@ -90,7 +90,7 @@ describe('Structured Data Generator – Property Tests', () => {
   // **Validates: Requirements 5.1, 5.2, 5.3, 5.4**
   // -------------------------------------------------------------------------
   it('Property 5: BreadcrumbList structure invariants', () => {
-    const siteUrl = 'https://danesm.github.io';
+    const siteUrl = 'https://daneshmishra.co.uk';
 
     assertProperty(
       fc.property(pathnameArb(), nonEmptyString(), (pathname, pageTitle) => {
@@ -121,7 +121,7 @@ describe('Structured Data Generator – Property Tests', () => {
   // **Validates: Requirements 5.5**
   // -------------------------------------------------------------------------
   it('Property 6: Breadcrumb path round-trip', () => {
-    const siteUrl = 'https://danesm.github.io';
+    const siteUrl = 'https://daneshmishra.co.uk';
 
     assertProperty(
       fc.property(pathnameArb(), nonEmptyString(), (pathname, pageTitle) => {
@@ -155,7 +155,7 @@ describe('Structured Data Generator – Property Tests', () => {
 describe('Structured Data Generator – Unit Tests', () => {
   it('Root breadcrumb returns single Home item', () => {
     const schema = generateBreadcrumbSchema(
-      'https://danesm.github.io',
+      'https://daneshmishra.co.uk',
       '/',
       'Home',
     ) as Record<string, unknown>;
@@ -164,12 +164,12 @@ describe('Structured Data Generator – Unit Tests', () => {
     expect(items).toHaveLength(1);
     expect(items[0].name).toBe('Home');
     expect(items[0].position).toBe(1);
-    expect(items[0].item).toBe('https://danesm.github.io/');
+    expect(items[0].item).toBe('https://daneshmishra.co.uk/');
   });
 
   it('Nested path breadcrumb includes intermediate sections', () => {
     const schema = generateBreadcrumbSchema(
-      'https://danesm.github.io',
+      'https://daneshmishra.co.uk',
       '/blog/git-github-basics/',
       'Git & GitHub Basics',
     ) as Record<string, unknown>;
@@ -180,19 +180,19 @@ describe('Structured Data Generator – Unit Tests', () => {
       '@type': 'ListItem',
       position: 1,
       name: 'Home',
-      item: 'https://danesm.github.io/',
+      item: 'https://daneshmishra.co.uk/',
     });
     expect(items[1]).toEqual({
       '@type': 'ListItem',
       position: 2,
       name: 'Blog',
-      item: 'https://danesm.github.io/blog/',
+      item: 'https://daneshmishra.co.uk/blog/',
     });
     expect(items[2]).toEqual({
       '@type': 'ListItem',
       position: 3,
       name: 'Git & GitHub Basics',
-      item: 'https://danesm.github.io/blog/git-github-basics/',
+      item: 'https://daneshmishra.co.uk/blog/git-github-basics/',
     });
   });
 
@@ -201,9 +201,9 @@ describe('Structured Data Generator – Unit Tests', () => {
       title: 'Test Post',
       description: 'A test blog post',
       datePublished: '2024-01-15',
-      url: 'https://danesm.github.io/blog/test-post/',
+      url: 'https://daneshmishra.co.uk/blog/test-post/',
       authorName: 'Danesh Mishra',
-      authorUrl: 'https://danesm.github.io',
+      authorUrl: 'https://daneshmishra.co.uk',
     }) as Record<string, unknown>;
 
     expect(schema['@type']).toBe('Article');
