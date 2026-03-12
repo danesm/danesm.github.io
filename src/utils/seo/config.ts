@@ -1,5 +1,5 @@
 export const SEO_CONFIG = {
-  siteUrl: 'https://danesm.github.io',
+  siteUrl: 'https://daneshmishra.co.uk',
   siteName: 'Danesh Mishra',
   defaultTitle: 'Danesh Mishra - Senior Cloud Architect',
   defaultOgImage: '/images/og-image.svg',

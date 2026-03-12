@@ -26,7 +26,7 @@ describe('Meta Tag Generator – Property Tests', () => {
   it('Property 1: Canonical URL round-trip', () => {
     assertProperty(
       fc.property(pathnameArb(), (pathname) => {
-        const siteUrl = 'https://danesm.github.io';
+        const siteUrl = 'https://daneshmishra.co.uk';
         const canonical = generateCanonicalURL(siteUrl, pathname);
         const parsed = new URL(canonical);
 
@@ -144,11 +144,11 @@ describe('Meta Tag Generator – Unit Tests', () => {
     const tags = generateMetaTags({
       title: 'Test Page',
       description: 'A test page',
-      siteUrl: 'https://danesm.github.io',
+      siteUrl: 'https://daneshmishra.co.uk',
       pathname: '/test/',
     });
-    expect(tags.ogImage).toBe('https://danesm.github.io/images/og-image.svg');
-    expect(tags.twitterImage).toBe('https://danesm.github.io/images/og-image.svg');
+    expect(tags.ogImage).toBe('https://daneshmishra.co.uk/images/og-image.svg');
+    expect(tags.twitterImage).toBe('https://daneshmishra.co.uk/images/og-image.svg');
   });
 
   it('Empty verification code is falsy', () => {

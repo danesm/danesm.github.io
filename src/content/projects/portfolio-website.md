@@ -4,7 +4,7 @@ description: "Modern personal portfolio built with Astro and Tailwind CSS, featu
 technologies: ["Astro", "Tailwind CSS", "TypeScript", "GitHub Actions"]
 category: "web"
 featured: true
-liveUrl: "https://danesm.github.io"
+liveUrl: "https://daneshmishra.co.uk"
 startDate: "2024"
 ---
 

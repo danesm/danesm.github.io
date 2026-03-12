@@ -190,7 +190,7 @@ export const metaTagInputArb = (): fc.Arbitrary<MetaTagInput> =>
   fc.record({
     title: nonEmptyString(),
     description: nonEmptyString(),
-    siteUrl: fc.constant('https://danesm.github.io'),
+    siteUrl: fc.constant('https://daneshmishra.co.uk'),
     pathname: pathnameArb(),
     ogImage: fc.option(
       fc.webUrl({ withFragments: false, withQueryParameters: false }),
@@ -214,7 +214,7 @@ export const articleSchemaInputArb = (): fc.Arbitrary<ArticleSchemaInput> =>
     title: nonEmptyString(),
     description: nonEmptyString(),
     datePublished: dateString(),
-    url: fc.constant('https://danesm.github.io').chain((base) =>
+    url: fc.constant('https://daneshmishra.co.uk').chain((base) =>
       pathnameArb().map((path) => `${base}${path}`),
     ),
     tags: fc.option(
