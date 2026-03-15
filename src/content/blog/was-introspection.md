@@ -3,6 +3,7 @@ title: "WebSphere Application Server Introspection and Troubleshooting"
 date: 2018-03-15
 description: "A practical guide to introspecting and troubleshooting WebSphere Application Server environments, covering key diagnostic tools and techniques."
 tags: ["websphere", "java", "middleware"]
+logoImage: "/images/IBM-WebSphere.png"
 ---
 
 ## Why Introspection Matters

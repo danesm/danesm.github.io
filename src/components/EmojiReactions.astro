@@ -1,0 +1,229 @@
+---
+/**
+ * EmojiReactions component — lets readers react to blog posts with emoji.
+ * Persists reactions in localStorage per post slug.
+ */
+
+interface Props {
+  slug: string;
+}
+
+const { slug } = Astro.props;
+---
+
+<div class="emoji-reactions" data-slug={slug} aria-label="React to this post">
+  <p class="reactions-label">Was this helpful?</p>
+  <div class="reactions-row">
+    <button class="reaction-btn" data-emoji="🔥" aria-label="Fire reaction" type="button">
+      <span class="emoji" aria-hidden="true">🔥</span>
+      <span class="reaction-count">0</span>
+    </button>
+    <button class="reaction-btn" data-emoji="👍" aria-label="Thumbs up reaction" type="button">
+      <span class="emoji" aria-hidden="true">👍</span>
+      <span class="reaction-count">0</span>
+    </button>
+    <button class="reaction-btn" data-emoji="💡" aria-label="Lightbulb reaction" type="button">
+      <span class="emoji" aria-hidden="true">💡</span>
+      <span class="reaction-count">0</span>
+    </button>
+    <button class="reaction-btn" data-emoji="❤️" aria-label="Heart reaction" type="button">
+      <span class="emoji" aria-hidden="true">❤️</span>
+      <span class="reaction-count">0</span>
+    </button>
+    <button class="reaction-btn" data-emoji="🚀" aria-label="Rocket reaction" type="button">
+      <span class="emoji" aria-hidden="true">🚀</span>
+      <span class="reaction-count">0</span>
+    </button>
+  </div>
+</div>
+
+<script>
+  function initReactions() {
+    const containers = document.querySelectorAll('.emoji-reactions');
+
+    containers.forEach((container) => {
+      const slug = container.getAttribute('data-slug');
+      if (!slug) return;
+
+      const storageKey = `blog-reactions-${slug}`;
+      const reactions = JSON.parse(localStorage.getItem(storageKey) || '{}');
+
+      const buttons = container.querySelectorAll('.reaction-btn');
+
+      // Render saved state
+      buttons.forEach((btn) => {
+        const emoji = btn.getAttribute('data-emoji');
+        if (!emoji) return;
+        const count = reactions[emoji]?.count || 0;
+        const active = reactions[emoji]?.active || false;
+
+        const countEl = btn.querySelector('.reaction-count');
+        if (countEl) countEl.textContent = String(count);
+        if (active) btn.classList.add('active');
+      });
+
+      // Handle clicks
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const emoji = btn.getAttribute('data-emoji');
+          if (!emoji) return;
+
+          const current = JSON.parse(localStorage.getItem(storageKey) || '{}');
+
+          if (current[emoji]?.active) {
+            // Un-react
+            current[emoji].count = Math.max(0, (current[emoji].count || 1) - 1);
+            current[emoji].active = false;
+            btn.classList.remove('active');
+          } else {
+            // React
+            if (!current[emoji]) current[emoji] = { count: 0, active: false };
+            current[emoji].count += 1;
+            current[emoji].active = true;
+            btn.classList.add('active');
+
+            // Pop animation
+            btn.classList.add('pop');
+            setTimeout(() => btn.classList.remove('pop'), 300);
+          }
+
+          localStorage.setItem(storageKey, JSON.stringify(current));
+
+          const countEl = btn.querySelector('.reaction-count');
+          if (countEl) countEl.textContent = String(current[emoji].count);
+        });
+      });
+    });
+  }
+
+  // Run on initial load and on Astro page transitions
+  initReactions();
+  document.addEventListener('astro:after-swap', initReactions);
+</script>
+
+<style>
+  .emoji-reactions {
+    margin: 2.5rem 0 0;
+    padding: 1.5rem;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    text-align: center;
+  }
+
+  :global(.dark) .emoji-reactions {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.06);
+  }
+
+  .reactions-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin: 0 0 1rem;
+  }
+
+  :global(.dark) .reactions-label {
+    color: #9ca3af;
+  }
+
+  .reactions-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+  }
+
+  .reaction-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    padding: 0.5rem 0.875rem;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 9999px;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.875rem;
+    line-height: 1;
+  }
+
+  :global(.dark) .reaction-btn {
+    background: rgba(31, 41, 55, 0.6);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .reaction-btn:hover {
+    border-color: #2563eb;
+    background-color: rgba(37, 99, 235, 0.04);
+    transform: translateY(-1px);
+  }
+
+  :global(.dark) .reaction-btn:hover {
+    border-color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.08);
+  }
+
+  .reaction-btn:focus-visible {
+    outline: 2px solid #2563eb;
+    outline-offset: 2px;
+  }
+
+  .reaction-btn.active {
+    border-color: #2563eb;
+    background-color: rgba(37, 99, 235, 0.08);
+    box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.15);
+  }
+
+  :global(.dark) .reaction-btn.active {
+    border-color: #60a5fa;
+    background-color: rgba(96, 165, 250, 0.12);
+    box-shadow: 0 0 0 1px rgba(96, 165, 250, 0.2);
+  }
+
+  .emoji {
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .reaction-count {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: #6b7280;
+    min-width: 0.75rem;
+  }
+
+  .reaction-btn.active .reaction-count {
+    color: #2563eb;
+  }
+
+  :global(.dark) .reaction-count {
+    color: #9ca3af;
+  }
+
+  :global(.dark) .reaction-btn.active .reaction-count {
+    color: #93c5fd;
+  }
+
+  .reaction-btn.pop {
+    animation: pop 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reaction-btn {
+      transition: none;
+    }
+    .reaction-btn.pop {
+      animation: none;
+    }
+    .reaction-btn:hover {
+      transform: none;
+    }
+  }
+</style>

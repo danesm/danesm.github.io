@@ -3,6 +3,7 @@ title: "Introduction to Linux Containers"
 date: 2019-08-10
 description: "Understanding Linux containers from the ground up — namespaces, cgroups, and how Docker builds on these primitives to simplify application deployment."
 tags: ["linux", "containers", "docker"]
+logoImage: "/images/docker-logo.svg"
 ---
 
 ## What Are Containers?

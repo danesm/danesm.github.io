@@ -1,0 +1,164 @@
+---
+/**
+ * BlogCoverBanner — shows a cover image if provided, otherwise renders
+ * a gradient banner with an icon derived from the first tag.
+ */
+
+interface Props {
+  coverImage?: string;
+  logoImage?: string;
+  title: string;
+  tags: string[];
+}
+
+const { coverImage, logoImage, title, tags } = Astro.props;
+
+const tagIcons: Record<string, string> = {
+  kiro: '⚡',
+  ai: '🤖',
+  aws: '☁️',
+  cloud: '☁️',
+  docker: '🐳',
+  containers: '📦',
+  linux: '🐧',
+  git: '🔀',
+  github: '🔀',
+  tutorial: '📖',
+  pricing: '💰',
+  mcp: '🔌',
+  'developer-tools': '🛠️',
+  'context-engineering': '🧠',
+  agents: '🤖',
+  productivity: '🚀',
+  ide: '💻',
+};
+
+const firstTag = tags[0] || '';
+const icon = tagIcons[firstTag] || '📝';
+const label = firstTag.replace(/-/g, ' ');
+
+// Generate a deterministic gradient based on the first tag
+const gradients: Record<string, string> = {
+  kiro: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #2563eb 100%)',
+  ai: 'linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)',
+  aws: 'linear-gradient(135deg, #232f3e 0%, #1a3a5c 40%, #ff9900 100%)',
+  pricing: 'linear-gradient(135deg, #0f172a 0%, #1e293b 40%, #059669 100%)',
+  ide: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4f46e5 100%)',
+  mcp: 'linear-gradient(135deg, #0f172a 0%, #1e3a5f 40%, #06b6d4 100%)',
+  'developer-tools': 'linear-gradient(135deg, #1c1917 0%, #44403c 40%, #d97706 100%)',
+  git: 'linear-gradient(135deg, #1a1a1a 0%, #2d1a0e 40%, #F05032 100%)',
+  linux: 'linear-gradient(135deg, #0c1220 0%, #1a2744 40%, #2496ED 100%)',
+  mac: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 40%, #555555 100%)',
+  websphere: 'linear-gradient(135deg, #0a1628 0%, #1a3050 40%, #0530ad 100%)',
+};
+
+const gradient = gradients[firstTag] || 'linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #2563eb 100%)';
+---
+
+{coverImage ? (
+  <div class="cover-image-wrapper">
+    <img src={coverImage} alt={`Cover image for ${title}`} class="cover-image" loading="eager" />
+  </div>
+) : (
+  <div class="cover-banner" style={`background: ${gradient};`} role="img" aria-label={`${label} topic banner`}>
+    <div class="banner-pattern" aria-hidden="true"></div>
+    <div class="banner-content">
+      {logoImage ? (
+        <img src={logoImage} alt={`${title} logo`} class="banner-logo" />
+      ) : (
+        <span class="banner-icon">{icon}</span>
+      )}
+      <span class="banner-label">{label}</span>
+    </div>
+  </div>
+)}
+
+<style>
+  .cover-image-wrapper {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    aspect-ratio: 21 / 9;
+  }
+
+  .cover-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .cover-banner {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 2rem;
+    padding: 2.5rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 160px;
+  }
+
+  @media (min-width: 768px) {
+    .cover-banner {
+      min-height: 200px;
+      padding: 3rem 2rem;
+    }
+  }
+
+  .banner-pattern {
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image:
+      radial-gradient(circle at 20% 50%, white 1px, transparent 1px),
+      radial-gradient(circle at 80% 20%, white 1px, transparent 1px),
+      radial-gradient(circle at 50% 80%, white 1.5px, transparent 1.5px);
+    background-size: 60px 60px, 80px 80px, 100px 100px;
+  }
+
+  .banner-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.625rem;
+  }
+
+  .banner-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  @media (min-width: 768px) {
+    .banner-icon {
+      font-size: 3rem;
+    }
+  }
+
+  .banner-logo {
+    max-height: 56px;
+    width: auto;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+  }
+
+  @media (min-width: 768px) {
+    .banner-logo {
+      max-height: 72px;
+    }
+  }
+
+  .banner-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    backdrop-filter: blur(4px);
+  }
+</style>

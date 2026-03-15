@@ -8,6 +8,8 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Header from '../../components/Header.astro';
 import Footer from '../../components/Footer.astro';
+import EmojiReactions from '../../components/EmojiReactions.astro';
+import BlogCoverBanner from '../../components/BlogCoverBanner.astro';
 import '../../styles/global.css';
 import { generateCanonicalURL } from '../../utils/seo/meta';
 import { generateArticleSchema } from '../../utils/seo/structured-data';
@@ -64,6 +66,13 @@ const articleSchema = generateArticleSchema({
             Back to Blog
           </a>
 
+          <BlogCoverBanner
+            coverImage={post.data.coverImage}
+            logoImage={post.data.logoImage}
+            title={post.data.title}
+            tags={post.data.tags}
+          />
+
           <header class="post-header">
             <time class="post-date" datetime={post.data.date.toISOString()}>
               {formattedDate}
@@ -83,6 +92,8 @@ const articleSchema = generateArticleSchema({
           <div class="post-content prose">
             <Content />
           </div>
+
+          <EmojiReactions slug={post.slug} />
 
           <footer class="post-footer">
             <a href="/blog" class="back-link">

@@ -3,6 +3,7 @@ title: "Essential Mac Keyboard Shortcuts for Developers"
 date: 2019-01-20
 description: "A curated collection of Mac keyboard shortcuts that boost developer productivity, from system navigation to terminal and IDE tricks."
 tags: ["mac", "productivity", "shortcuts"]
+logoImage: "/images/apple-logo.svg"
 ---
 
 ## Why Keyboard Shortcuts Matter
