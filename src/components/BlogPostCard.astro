@@ -17,10 +17,62 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
   month: 'long',
   day: 'numeric',
 });
+
+const tagIcons: Record<string, string> = {
+  kiro: '⚡',
+  ai: '🤖',
+  aws: '☁️',
+  cloud: '☁️',
+  docker: '🐳',
+  containers: '📦',
+  linux: '🐧',
+  git: '🔀',
+  github: '🔀',
+  tutorial: '📖',
+  pricing: '💰',
+  mcp: '🔌',
+  'developer-tools': '🛠️',
+  'context-engineering': '🧠',
+  agents: '🤖',
+  productivity: '🚀',
+  ide: '💻',
+};
+
+const firstTag = post.data.tags[0] || '';
+const icon = tagIcons[firstTag] || '📝';
+
+const gradients: Record<string, string> = {
+  kiro: 'linear-gradient(135deg, #0f172a, #2563eb)',
+  ai: 'linear-gradient(135deg, #1a1a2e, #0f3460)',
+  aws: 'linear-gradient(135deg, #232f3e, #ff9900)',
+  pricing: 'linear-gradient(135deg, #0f172a, #059669)',
+  ide: 'linear-gradient(135deg, #1e1b4b, #4f46e5)',
+  mcp: 'linear-gradient(135deg, #0f172a, #06b6d4)',
+  'developer-tools': 'linear-gradient(135deg, #1c1917, #d97706)',
+  git: 'linear-gradient(135deg, #1a1a1a, #F05032)',
+  linux: 'linear-gradient(135deg, #0c1220, #2496ED)',
+  mac: 'linear-gradient(135deg, #1a1a1a, #555555)',
+  websphere: 'linear-gradient(135deg, #0a1628, #0530ad)',
+};
+
+const gradient = gradients[firstTag] || 'linear-gradient(135deg, #0f172a, #2563eb)';
 ---
 
 <article class="blog-card">
   <a href={`/blog/${post.slug}`} class="blog-card-link">
+    {post.data.coverImage ? (
+      <div class="card-cover-image">
+        <img src={post.data.coverImage} alt="" loading="lazy" />
+      </div>
+    ) : (
+      <div class="card-cover-gradient" style={`background: ${gradient};`}>
+        {post.data.logoImage ? (
+          <img src={post.data.logoImage} alt="" class="card-cover-logo" loading="lazy" />
+        ) : (
+          <span class="card-cover-icon">{icon}</span>
+        )}
+      </div>
+    )}
     <div class="blog-card-content">
       <time class="blog-date" datetime={post.data.date.toISOString()}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -108,6 +160,37 @@ const formattedDate = post.data.date.toLocaleDateString('en-US', {
     display: block;
     text-decoration: none;
     color: inherit;
+  }
+
+  .card-cover-image {
+    aspect-ratio: 21 / 9;
+    overflow: hidden;
+  }
+
+  .card-cover-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-cover-gradient {
+    aspect-ratio: 21 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .card-cover-icon {
+    font-size: 2rem;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
+  }
+
+  .card-cover-logo {
+    max-height: 40px;
+    width: auto;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.3));
   }
 
   .blog-card-link:focus-visible {

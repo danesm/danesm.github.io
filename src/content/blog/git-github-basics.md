@@ -3,6 +3,7 @@ title: "Getting Started with Git and GitHub"
 date: 2019-04-15
 description: "A hands-on tutorial covering Git fundamentals and GitHub workflows, from your first commit to pull requests and branching strategies."
 tags: ["git", "github", "tutorial"]
+logoImage: "/images/git-logo.svg"
 ---
 
 ## Why Git?
